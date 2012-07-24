@@ -1,0 +1,25 @@
+# 实际开发的时候，database配置务必修改一下
+
+development:
+  adapter: mysql2
+  encoding: utf8
+  database: pin-work
+  username: root
+  password: '111111'
+  host: localhost
+
+test:
+  adapter: mysql2
+  encoding: utf8
+  database: pin-work-test
+  username: root
+  password: '111111'
+  host: localhost
+
+production:
+  adapter: mysql2
+  encoding: utf8
+  database: pin-work-production
+  username: root
+  password: '111111'
+  host: localhost
