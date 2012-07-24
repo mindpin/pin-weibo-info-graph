@@ -6,5 +6,18 @@ class IndexController < ApplicationController
     
     # 如果还没有登录，渲染登录页
     return render :template=>'index/login'
+
+
   end
+
+  def callback
+    client = Weibo2::Client.from_hash(:access_token => params[:code])
+    
+    if client.is_authorized?
+      response = client.account.get_uid
+    end
+
+    render :nothing => true
+  end
+
 end

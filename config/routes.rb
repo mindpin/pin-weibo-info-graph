@@ -9,4 +9,8 @@ PinWorkResultsShow::Application.routes.draw do
   post '/signup_submit' => 'signup#form_submit'
 
 
+
+  get  '/callback' => 'index#callback'
+
+
 end

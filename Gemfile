@@ -11,8 +11,8 @@ gem 'therubyracer'
 
 gem 'haml'
 
-gem "paperclip", "~> 2.7"
-gem 'acts-as-taggable-on', '~> 2.3.1'
+gem 'oauth2'
+gem 'weibo2'
 
 group :assets do
   gem 'sass-rails',   '~> 3.1.4'
