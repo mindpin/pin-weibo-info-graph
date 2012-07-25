@@ -28,6 +28,15 @@ class UserWeiboAuth < ActiveRecord::Base
       end
       # end set_new_weibo_auth
 
+      # begin get_weibo_client
+      def get_weibo_client
+        token = self.weibo_auth.token
+        expires_in = self.weibo_auth.expires_in
+
+        Weibo2::Client.from_hash(:access_token => token, :expires_in => expires_in)
+      end
+      # end get_weibo_client
+
     end
   end
   # end UserMethods

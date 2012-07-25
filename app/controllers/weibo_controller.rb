@@ -5,10 +5,7 @@ class WeiboController < ApplicationController
     @new_client = Weibo2::Client.new
 
     unless current_user.weibo_auth.nil?
-      token = current_user.weibo_auth.token
-      expires_in = current_user.weibo_auth.expires_in
-
-      @client = Weibo2::Client.from_hash(:access_token => token, :expires_in => expires_in)
+      @client = current_user.get_weibo_client
       if @client.is_authorized?
         response = @client.account.get_uid
         @weibo_user = @client.users.show(response.parsed).parsed
@@ -30,13 +27,18 @@ class WeiboController < ApplicationController
 
   # 发送微博
   def create
-    token = current_user.weibo_auth.token
-    expires_in = current_user.weibo_auth.expires_in
-
-    client = Weibo2::Client.from_hash(:access_token => token, :expires_in => expires_in)
-
+    client = current_user.get_weibo_client
     client.statuses.update(params[:content])
 
     redirect_to :back
+  end
+
+
+  # 微博数据统计
+  def stats
+    client = current_user.get_weibo_client
+    unless params[:screen_name].nil?
+      @user_weibo = client.statuses.user_timeline(:screen_name => params[:screen_name]).parsed
+    end
   end
 end

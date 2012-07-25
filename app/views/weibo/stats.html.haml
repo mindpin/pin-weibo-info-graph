@@ -1,0 +1,14 @@
+.page-weibo-stats-query
+  = form_tag '/weibo/stats', :method => 'get' do
+    .field
+      %span= "用户名"
+      = text_field_tag 'screen_name', @screen_name
+      %span= "微博条数"
+    .field
+      = text_field_tag 'count', @count
+    .field
+      = submit_tag "查询"
+
+.page-weibo-stats-result
+  - unless @user_weibo.nil?
+    = debug @user_weibo
