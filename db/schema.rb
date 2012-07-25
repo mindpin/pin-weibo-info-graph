@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120725010020) do
+ActiveRecord::Schema.define(:version => 20120725063106) do
 
   create_table "online_records", :force => true do |t|
     t.integer  "user_id"
@@ -27,6 +27,8 @@ ActiveRecord::Schema.define(:version => 20120725010020) do
     t.string   "auth_code"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "token"
+    t.integer  "expires_in"
   end
 
   create_table "users", :force => true do |t|

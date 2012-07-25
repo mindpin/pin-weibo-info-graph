@@ -15,11 +15,19 @@ class UserWeiboAuth < ActiveRecord::Base
         UserWeiboAuth.where(:user_id => self.id).exists?
       end
 
-      def set_new_weibo_auth(auth_code)
+      # begin set_new_weibo_auth
+      def set_new_weibo_auth(auth_code, token, expires_in)
+        # 如果过期重新设置的话，先删除，后面再创建新的
+        self.weibo_auth.destroy unless self.weibo_auth.nil?
+
         unless has_weibo_auth?
-          UserWeiboAuth.create(:user => self, :auth_code => auth_code)
+          UserWeiboAuth.create(
+            :user => self, :auth_code => auth_code, :token => token, :expires_in => expires_in
+          )
         end
       end
+      # end set_new_weibo_auth
+
     end
   end
   # end UserMethods

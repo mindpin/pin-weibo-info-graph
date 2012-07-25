@@ -1,6 +1,13 @@
-- if current_user.weibo_auth.nil? || @weibo_user.nil?
+- if current_user.weibo_auth.nil? || @weibo_user.nil? ||  !@client.is_authorized?
   .page-weibo-register    
     =link_to "使用微博登录", @new_client.auth_code.authorize_url(:response_type => "code")
 - else
+  .page-weibo-notice
+    已经连接到微博
   .page-weibo-account
-    = debug @weibo_user
+    = image_tag("#{@weibo_user['avatar_large']}")
+    = @weibo_user['screen_name']
+
+    = form_tag '/weibo', :method => 'create' do
+      = text_area_tag 'content', nil, :rows => 6, :cols => 45
+      = submit_tag "发送微博"
