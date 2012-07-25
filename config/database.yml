@@ -3,7 +3,7 @@
 development:
   adapter: mysql2
   encoding: utf8
-  database: pin-work
+  database: pin-weibo
   username: root
   password: '111111'
   host: localhost
@@ -11,7 +11,7 @@ development:
 test:
   adapter: mysql2
   encoding: utf8
-  database: pin-work-test
+  database: pin-weibo-test
   username: root
   password: '111111'
   host: localhost
@@ -19,7 +19,7 @@ test:
 production:
   adapter: mysql2
   encoding: utf8
-  database: pin-work-production
+  database: pin-weibo-production
   username: root
   password: '111111'
   host: localhost

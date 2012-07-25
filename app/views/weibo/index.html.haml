@@ -1,0 +1,6 @@
+- if current_user.weibo_auth.nil? || @weibo_user.nil?
+  .page-weibo-register    
+    =link_to "使用微博登录", @new_client.auth_code.authorize_url(:response_type => "code")
+- else
+  .page-weibo-account
+    = debug @weibo_user
