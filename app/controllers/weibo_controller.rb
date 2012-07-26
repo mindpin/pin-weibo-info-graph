@@ -36,9 +36,31 @@ class WeiboController < ApplicationController
 
   # 微博数据统计
   def stats
-    client = current_user.get_weibo_client
-    unless params[:screen_name].nil?
-      @user_weibo = client.statuses.user_timeline(:screen_name => params[:screen_name]).parsed
+    @client = current_user.get_weibo_client
+
+    unless params[:screen_name].blank?
+      @weibo_statuses = []
+      screen_name = params[:screen_name]
+      count = params[:count].blank?? 0: params[:count].to_i
+
+      @user_weibo = @client.statuses.user_timeline({:screen_name => screen_name}).parsed
+      @weibo_statuses << @user_weibo['statuses']
+
+      if count > 50
+        api_count = count / 50
+        
+        api_count.times do |i|
+          @user_weibo = @client.statuses.user_timeline({:screen_name => screen_name, :page => i + 1}).parsed
+
+          @weibo_statuses << @user_weibo['statuses']
+        end
+      end
+
     end
+
   end
+
+
+
+
 end
