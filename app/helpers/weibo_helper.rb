@@ -20,7 +20,7 @@ module WeiboHelper
     count = 0
     weibo_statuses.each do |weibo|
       if weibo['retweeted_status'].nil?
-        unless weibo['thumbnail_pic '].blank?
+        unless weibo['thumbnail_pic'].blank?
           count = count + 1
         end
       end
