@@ -44,19 +44,20 @@ class WeiboController < ApplicationController
       count = params[:count].blank?? 0: params[:count].to_i
 
       @user_weibo = @client.statuses.user_timeline({:screen_name => screen_name}).parsed
-      @weibo_statuses << @user_weibo['statuses']
+      @weibo_statuses = @weibo_statuses + @user_weibo['statuses']
 
-      if count > 50
-        api_count = count / 50
+      if count > 20
+        api_count = count / 20
         
         api_count.times do |i|
-          @user_weibo = @client.statuses.user_timeline({:screen_name => screen_name, :page => i + 1}).parsed
+          @next_user_weibo = @client.statuses.user_timeline({:screen_name => screen_name, :page => i + 1}).parsed
 
-          @weibo_statuses << @user_weibo['statuses']
+          @weibo_statuses =  @weibo_statuses + @user_weibo['statuses']
         end
       end
 
     end
+
 
   end
 
