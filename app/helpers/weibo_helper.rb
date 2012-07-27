@@ -4,7 +4,7 @@ module WeiboHelper
   def get_origin_count(weibo_statuses)
     count = 0
     weibo_statuses.each do |weibo|
-      if weibo['retweeted_status'].nil?
+      if weibo.retweeted_status_id.nil?
         count = count + 1
       end
     end
@@ -19,8 +19,8 @@ module WeiboHelper
   def get_origin_count_with_pic(weibo_statuses)
     count = 0
     weibo_statuses.each do |weibo|
-      if weibo['retweeted_status'].nil?
-        unless weibo['thumbnail_pic'].blank?
+      if weibo.retweeted_status_id.nil?
+        unless weibo.thumbnail_pic.blank?
           count = count + 1
         end
       end
@@ -35,11 +35,10 @@ module WeiboHelper
   def get_forward_count_with_pic(weibo_statuses)
     count = 0
     weibo_statuses.each do |weibo|
-      unless weibo['retweeted_status'].nil?
-        p weibo['retweeted_status']
-        return 3
+      unless weibo.retweeted_status_id.nil?
         
-        unless weibo['retweeted_status']['thumbnail_pic'].blank?
+        retweeted_status = WeiboStatus.find(weibo.retweeted_status_id)
+        unless retweeted_status.thumbnail_pic.blank?
           count = count + 1
         end
       end
@@ -54,14 +53,16 @@ module WeiboHelper
   def get_forward_users(weibo_statuses)
     users = []
     weibo_statuses.each do |weibo|
-      unless weibo['retweeted_status'].nil?
-        users << weibo['retweeted_status']['user']['screen_name']
+      unless weibo.retweeted_status_id.nil?
+        retweeted_status = WeiboStatus.find(weibo.retweeted_status_id)
+        weibo_user = retweeted_status.weibo_user
+        users << weibo_user.screen_name
       end
     end
 
     Hash[users.group_by {|x| x}.map {|k, v| [k, v.count]}]
-
   end
   # end get_forward_users
+
 
 end
