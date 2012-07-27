@@ -55,7 +55,10 @@ module WeiboHelper
     weibo_statuses.each do |weibo|
       unless weibo.retweeted_status_id.nil?
         retweeted_status = WeiboStatus.find_by_weibo_status_id(weibo.retweeted_status_id)
-        users << WeiboUser.find_by_weibo_user_id(retweeted_status.weibo_user_id).screen_name
+        user = WeiboUser.find_by_weibo_user_id(retweeted_status.weibo_user_id)
+        unless user.nil?
+          users << user.screen_name
+        end
       end
     end
 

@@ -50,11 +50,12 @@ class WeiboStatus < ActiveRecord::Base
       weibo_statuses.each do |weibo|
 
         retweeted_status = weibo['retweeted_status'].nil?? '': weibo['retweeted_status']
+        weibo_user_id = weibo['user'].nil?? '': weibo['user']['id']
 
         # 创建 WeiboStatus 记录
         WeiboStatus.create(
           :weibo_status_id => weibo['id'],
-          :weibo_user_id => weibo['user']['id'],
+          :weibo_user_id => weibo_user_id,
           :text => weibo['text'],
           :retweeted_status_id => retweeted_status['id'],
           :bmiddle_pic => weibo['bmiddle_pic'],
@@ -102,14 +103,19 @@ class WeiboStatus < ActiveRecord::Base
 
 
   def self.create_weibo_user(weibo)
-    WeiboUser.create(
-      :weibo_user_id => weibo['user']['id'],
-      :screen_name => weibo['user']['screen_name'],
-      :profile_image_url => weibo['user']['profile_image_url'],
-      :gender  => weibo['user']['gender'],
-      :description => weibo['user']['description'],
-      :json => weibo['user'].to_json
-    )
+    unless weibo['user'].nil?
+      WeiboUser.create(
+        :weibo_user_id => weibo['user']['id'],
+        :screen_name => weibo['user']['screen_name'],
+        :profile_image_url => weibo['user']['profile_image_url'],
+        :gender  => weibo['user']['gender'],
+        :description => weibo['user']['description'],
+        :json => weibo['user'].to_json
+      )
+    else
+      p weibo
+    end
+
   end
   # end create_weibo_user
 
