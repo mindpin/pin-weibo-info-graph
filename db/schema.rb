@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120725063106) do
+ActiveRecord::Schema.define(:version => 20120727031114) do
 
   create_table "online_records", :force => true do |t|
     t.integer  "user_id"
@@ -51,5 +51,34 @@ ActiveRecord::Schema.define(:version => 20120725063106) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "weibo_statuses", :force => true do |t|
+    t.integer  "weibo_status_id",     :limit => 8
+    t.integer  "weibo_user_id",       :limit => 8
+    t.string   "text"
+    t.integer  "retweeted_status_id", :limit => 8
+    t.string   "bmiddle_pic"
+    t.string   "original_pic"
+    t.string   "thumbnail_pic"
+    t.text     "json"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "weibo_statuses", ["weibo_status_id"], :name => "index_weibo_statuses_on_weibo_status_id"
+  add_index "weibo_statuses", ["weibo_user_id"], :name => "index_weibo_statuses_on_weibo_user_id"
+
+  create_table "weibo_users", :force => true do |t|
+    t.integer  "weibo_user_id",     :limit => 8
+    t.string   "screen_name"
+    t.string   "profile_image_url"
+    t.string   "gender"
+    t.text     "description"
+    t.text     "json"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "weibo_users", ["weibo_user_id"], :name => "index_weibo_users_on_weibo_user_id"
 
 end

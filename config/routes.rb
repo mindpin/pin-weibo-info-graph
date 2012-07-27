@@ -12,6 +12,7 @@ PinWorkResultsShow::Application.routes.draw do
   resources :weibo do
     collection do
       get :callback
+      get :grab
       get :stats
     end
   end

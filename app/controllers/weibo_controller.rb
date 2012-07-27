@@ -33,6 +33,20 @@ class WeiboController < ApplicationController
     redirect_to :back
   end
 
+  # 根据 weibo api 把数据采集到本地
+  def grab
+    client = current_user.get_weibo_client
+    unless params[:screen_name].blank?
+      screen_name = params[:screen_name]
+      count = params[:count].blank?? 0: params[:count].to_i
+
+      user_weibo = client.statuses.user_timeline({:screen_name => screen_name}).parsed
+      
+      WeiboStatus.grab_from_weibo(user_weibo, count)
+    end
+  end
+  # end of grab
+
 
   # 微博数据统计
   def stats
@@ -66,8 +80,9 @@ class WeiboController < ApplicationController
 
     end
 
-
   end
+  # end of stats
+
 
 
 
