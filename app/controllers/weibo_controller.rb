@@ -40,13 +40,11 @@ class WeiboController < ApplicationController
       screen_name = params[:screen_name]
       count = params[:count].blank?? 0: params[:count].to_i
 
-=begin
       # 先根据 api 获取微博列表
       weibo_statuses = WeiboStatus.get_weibo_statuses(current_user, screen_name, count)
 
       # 存到数据库
       WeiboStatus.store_weibo_statuses(weibo_statuses)
-=end
 
       # 统计查询
       @weibo_user = WeiboUser.find_by_screen_name(screen_name)
