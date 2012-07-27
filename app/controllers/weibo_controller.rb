@@ -51,10 +51,6 @@ class WeiboController < ApplicationController
       # 统计查询
       @weibo_user = WeiboUser.find_by_screen_name(screen_name)
 
-      p @weibo_user.weibo_statuses
-      p 888888888888888888888888
-
-      render :nothing => true
     end
   end
   # end of grab
