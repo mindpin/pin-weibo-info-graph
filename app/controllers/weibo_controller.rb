@@ -34,7 +34,7 @@ class WeiboController < ApplicationController
   end
 
   # 根据 weibo api 把数据采集到本地
-  def grab
+  def stats
     unless params[:screen_name].blank?
 
       screen_name = params[:screen_name]
@@ -51,49 +51,6 @@ class WeiboController < ApplicationController
 
     end
   end
-  # end of grab
-
-
-  # 微博数据统计
-  def stats
-
-
-=begin
-    @client = current_user.get_weibo_client
-
-    unless params[:screen_name].blank?
-      screen_name = params[:screen_name]
-      count = params[:count].blank?? 0: params[:count].to_i
-
-      @user_weibo = @client.statuses.user_timeline({:screen_name => screen_name}).parsed
-      @weibo_statuses = @user_weibo['statuses']
-
-      # 如果用户输入的查询数量超过 20, 并且第一次查询结果也等于20, 说明用户的微博至少超过20
-      if count > 20 && @weibo_statuses.length == 20
-        api_count = count / 20
-
-        api_count.times do |i|
-          @user_weibo = @client.statuses.user_timeline({:screen_name => screen_name, :page => i + 1}).parsed
-          
-          # 数组查询合并
-          @weibo_statuses =  @weibo_statuses + @user_weibo['statuses']
-        end
-
-        # 如果查询结果数量大于用户输入的数值， 则数组长度取用户输入的数值
-        if @weibo_statuses.length > count
-          count = count - 1
-          @weibo_statuses = @weibo_statuses[0..count]
-        end
-        
-      end
-
-    end
-=end
-  end
   # end of stats
-
-
-
-
 
 end
