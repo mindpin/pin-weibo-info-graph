@@ -16,5 +16,12 @@ PinWorkResultsShow::Application.routes.draw do
     end
   end
 
+  resources :weibo_users do
+    collection do
+      
+    end
+  end
+  get '/weibo_users/:weibo_user_id/word_stats'          => 'weibo_users#word_stats'
+
 
 end

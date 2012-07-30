@@ -13,6 +13,8 @@ gem 'haml'
 
 gem 'oauth2'
 gem 'weibo2'
+gem 'thinking-sphinx', '2.0.10'
+gem 'rmmseg-cpp'
 
 group :assets do
   gem 'sass-rails',   '~> 3.1.4'
