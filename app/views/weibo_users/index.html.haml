@@ -2,5 +2,7 @@
 - hbreadcrumb '本地微博用户', '/weibo_users'
 
 .page-weibo-users
-  -# 这里显示所有本地已经获取过来的微博用户列表
-  -# 每个用户可以通过链接点到详细信息显示页
+  %ul
+    - WeiboUser.all.each do |weibo_user|
+      %li
+        =link_to weibo_user.screen_name, "/weibo_users/#{weibo_user.weibo_user_id}"

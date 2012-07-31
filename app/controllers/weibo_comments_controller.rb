@@ -1,4 +1,5 @@
-class WeiboCommentsController < ApplicationController
+class WeiboCommentsController < ApplicationController 
+
   def index
     unless params[:screen_name].nil?
       weibo_user = WeiboUser.find_by_screen_name(params[:screen_name])
@@ -7,11 +8,17 @@ class WeiboCommentsController < ApplicationController
 
         weibo_user.store_comments(comments)
 
-        # 显示，用于测试
         @comments = WeiboComment.all
       rescue
         p 'user not in database'
       end
     end
   end
+
+
+  def show
+    @weibo_status = WeiboStatus.find_by_weibo_status_id(params[:id])
+    @weibo_comments = WeiboComment.find_all_by_weibo_status_id(params[:id])
+  end
+
 end

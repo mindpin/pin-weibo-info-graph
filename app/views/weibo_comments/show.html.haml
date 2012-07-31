@@ -1,0 +1,15 @@
+- hbreadcrumb '首页', '/'
+- hbreadcrumb "微博：#{@weibo_status.text}", '#'
+
+
+.sync-comments
+  =link_to "同步评论", "/weibo_comments"
+
+.page-weibo-users
+
+  - unless @weibo_comments.nil?
+    %ul
+      - @weibo_comments.each do |comment|
+        %li
+          .field
+            = comment.text

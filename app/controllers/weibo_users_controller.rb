@@ -12,5 +12,7 @@ class WeiboUsersController < ApplicationController
 
   def show
     @weibo_user = WeiboUser.find_by_weibo_user_id(params[:id])
+
+    @weibo_statuses = @weibo_user.weibo_statuses.paginate(:page => params[:page], :per_page => 20).order('id DESC')
   end
 end
