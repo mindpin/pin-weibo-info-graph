@@ -1,0 +1,28 @@
+.page-weibo-stats-result{
+  .weibo-user{
+    margin-bottom:20px;
+    .name{font-size:18px;font-weight:bold;}
+  }
+
+  .stats{
+    .repost-users{
+      margin-left:20px;
+      .user{
+        overflow:hidden;
+        margin-bottom:5px;
+        .avatar{
+          float:left;
+          margin-right:10px;
+          img{width:24px;height:24px;}
+        }
+        .count{
+          float:left;
+        }
+      }
+    }
+  }
+}
+
+.page-weibo-stats-query{
+  margin-bottom:20px;
+}

@@ -3,10 +3,7 @@ require File.expand_path('../boot', __FILE__)
 require 'rails/all'
 
 if defined?(Bundler)
-  # If you precompile assets before deploying to production, use this line
-  Bundler.require(*Rails.groups(:assets => %w(development test)))
-  # If you want your assets lazily compiled in production, use this line
-  # Bundler.require(:default, :assets, Rails.env)
+  Bundler.require(:default, :assets, Rails.env)
 end
 
 module PinWorkResultsShow
@@ -46,5 +43,10 @@ module PinWorkResultsShow
     config.assets.version = '1.0'
 
     config.autoload_paths += Dir["#{Rails.root}/lib/**/"]
+
+    Weibo2::Config.api_key = "4271779692"
+    Weibo2::Config.api_secret = "96371b3a41daaca4cec23e3e8d31018e"
+    Weibo2::Config.redirect_uri = "http://192.168.1.26:3000/weibo/callback"
+
   end
 end

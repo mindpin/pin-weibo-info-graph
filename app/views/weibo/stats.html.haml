@@ -1,10 +1,10 @@
 .page-weibo-stats-query
   = form_tag '/weibo/stats', :method => 'get' do
     .field
-      %span= "用户名"
+      %label= "微博用户名"
       = text_field_tag 'screen_name', @screen_name
-      %span= "微博条数"
     .field
+      %label= "要采集的微博条数"
       = text_field_tag 'count', @count
     .field
       = submit_tag "采集"
@@ -22,18 +22,32 @@
 
       forward_users = get_forward_users(weibo_statuses)
     
-    
-    %ul
-      %li= " 总共统计 #{total_count} 条微博 " 
-      %li= " 原创微博 #{origin_count} 条 "
-      %li= " 原创微博中带有图片的微博 #{origin_count_with_pic} 条 "
-      %li= " 转发微博 #{forward_count} 条 "
-      %li= " 转发微博中带有图片的微博 #{forward_count_with_pic} 条 "
+    .weibo-user
+      .avatar
+        %img{:src=>@weibo_user.profile_image_url}
+      .name
+        = @weibo_user.screen_name
+      .word-stat
+        %a{:href=>"/weibo_users/#{@weibo_user.weibo_user_id}/word_stats"} 查看分词统计
 
-      %li
+    .stats
+      .count 
+        总共统计 #{total_count} 条微博
+      .written 
+        原创微博 #{origin_count} 条
+      .written-with-img
+        原创微博中带有图片的微博 #{origin_count_with_pic} 条
+      .repost
+        转发微博 #{forward_count} 条
+      .repost-with-img
+        转发微博中带有图片的微博 #{forward_count_with_pic} 条
+
+      .repost-users
         - if forward_users.length > 0 
-          转发过以下这些人的微博
-          %ul
-            - forward_users.each do |user, count|
-              %li= "#{user}: #{count}"
+          .desc 转发过以下这些人的微博
+          - forward_users.each do |user, count|
+            .user
+              .avatar
+                %img{:src=>user.profile_image_url}
+              .count= "#{user.screen_name}: #{count}"
 

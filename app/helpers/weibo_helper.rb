@@ -57,7 +57,7 @@ module WeiboHelper
         retweeted_status = WeiboStatus.find_by_weibo_status_id(weibo.retweeted_status_id)
         user = WeiboUser.find_by_weibo_user_id(retweeted_status.weibo_user_id)
         unless user.nil?
-          users << user.screen_name
+          users << user
         end
       end
     end
