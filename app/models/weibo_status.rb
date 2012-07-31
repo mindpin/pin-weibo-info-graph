@@ -3,13 +3,13 @@ class WeiboStatus < ActiveRecord::Base
 
   belongs_to :weibo_user, 
              :class_name => 'WeiboUser', 
-             :foreign_key => :weibo_user_id, :primary_key => :weibo_status_id
+             :foreign_key => :weibo_user_id, :primary_key => :weibo_user_id
 
   has_many :weibo_comments, :class_name => 'WeiboComment', :foreign_key => :weibo_status_id
 
-  #set_primary_key :weibo_status_id # 重新设置关联主键，不使用默认的 id 字段
-  
   validates_uniqueness_of :weibo_status_id
+
+  default_scope order('weibo_status_id DESC')
 
 
   # 先根据 api 获取微博列表

@@ -18,6 +18,7 @@ class WeiboCommentsController < ApplicationController
 
   def show
     @weibo_status = WeiboStatus.find_by_weibo_status_id(params[:id])
+    @weibo_user = @weibo_status.weibo_user
     @weibo_comments = WeiboComment.find_all_by_weibo_status_id(params[:id])
   end
 

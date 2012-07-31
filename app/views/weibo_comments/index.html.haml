@@ -1,3 +1,6 @@
+- hbreadcrumb '首页', '/'
+- hbreadcrumb "获取评论数据", '#'
+
 .page-weibo-comments-query
   = form_tag '/weibo_comments', :method => 'get' do
     .field
@@ -6,8 +9,6 @@
 
     .field.submit
       %a.form-submit-button{:href=>'javascript:;'} 同步
-
-
 
 .page-weibo-comments
   %ul

@@ -49,3 +49,50 @@
     }
   }
 }
+
+.page-weibo-users{
+  @include floatfix;
+
+  .weibo-user{
+    float:left;
+    width:100px;
+    height:100px;
+    margin-right:10px;
+    margin-bottom:10px;
+    border:solid 1px rgba(white, 0.2);
+    background-color:rgba(black, 0.4);
+    box-shadow:0 0 5px black;
+    padding:10px;
+    .avatar{
+      width:50px;height:50px;
+      margin-bottom:10px;
+    }
+    .name{
+      font-size:12px;
+      height:20px;line-height:20px;
+      width:100px;overflow:hidden;
+    }
+    .status-count{
+      font-size:12px;
+    }
+  }
+}
+
+.page-weibo-user-show{
+  .weibo-statuses{
+    width:600px;
+    .weibo-status{
+      margin-bottom:10px;
+      border:solid 1px rgba(white, 0.2);
+      background-color:rgba(black, 0.4);
+      box-shadow:0 0 5px black;
+      padding:10px;
+      .text{
+        
+      }
+      .see-comment{
+        font-size:12px;
+      }
+    }
+  }
+}

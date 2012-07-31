@@ -66,5 +66,12 @@ module WeiboHelper
   end
   # end get_forward_users
 
+  def weibo_user_avatar(weibo_user)
+    image_tag(weibo_user.profile_image_url)
+  end
+
+  def weibo_user_link(weibo_user)
+    link_to weibo_user.screen_name, "/weibo_users/#{weibo_user.weibo_user_id}"
+  end
 
 end

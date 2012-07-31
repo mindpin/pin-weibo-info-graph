@@ -2,7 +2,10 @@
 - hbreadcrumb '本地微博用户', '/weibo_users'
 
 .page-weibo-users
-  %ul
-    - WeiboUser.all.each do |weibo_user|
-      %li
-        =link_to weibo_user.screen_name, "/weibo_users/#{weibo_user.weibo_user_id}"
+  - @weibo_users.each do |weibo_user|
+    .weibo-user
+      .avatar= weibo_user_avatar(weibo_user)
+      .name= weibo_user_link(weibo_user)
+      .status-count= "#{weibo_user.weibo_statuses.count} 微博"
+
+.page-paginate= will_paginate @weibo_users
