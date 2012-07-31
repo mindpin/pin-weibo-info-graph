@@ -35,5 +35,40 @@ class WeiboUser < ActiveRecord::Base
   end
   # end of word_stats
 
+  
+  def get_all_comments(client_user)
+    client = client_user.get_weibo_client
+
+    statuses = self.weibo_statuses
+    if !statuses.nil? && statuses.any?
+      comments = []
+      statuses.each do |status|
+        response = client.comments.show(status.weibo_status_id).parsed
+
+        p response['comments']
+        return
+        comments = comments + response['comments']
+      end
+    end
+
+    comments
+  end
+  # end of get_all_comments
+
+
+  def store_comments(comments)
+    unless comments.nil?
+      comments.each do |comment|
+        WeiboComment.create(
+          :weibo_comment_id => comment['idstr'],
+          :text => comment['text'],
+          :weibo_user_id => comment['status']['user']['idstr'],
+          :weibo_status_id => comment['status']['idstr']
+        )
+      end
+    end
+  end
+  # end of store_comments
+
  
 end
