@@ -44,9 +44,6 @@ class WeiboUser < ActiveRecord::Base
       comments = []
       statuses.each do |status|
         response = client.comments.show(status.weibo_status_id).parsed
-
-        p response['comments']
-        return
         comments = comments + response['comments']
       end
     end
@@ -62,7 +59,7 @@ class WeiboUser < ActiveRecord::Base
         WeiboComment.create(
           :weibo_comment_id => comment['idstr'],
           :text => comment['text'],
-          :weibo_user_id => comment['status']['user']['idstr'],
+          :weibo_user_id => comment['user']['idstr'],
           :weibo_status_id => comment['status']['idstr']
         )
       end

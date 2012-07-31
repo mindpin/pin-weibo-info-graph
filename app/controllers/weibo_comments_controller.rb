@@ -6,6 +6,9 @@ class WeiboCommentsController < ApplicationController
         comments = weibo_user.get_all_comments(current_user)
 
         weibo_user.store_comments(comments)
+
+        # 显示，用于测试
+        @comments = WeiboComment.all
       rescue
         p 'user not in database'
       end
