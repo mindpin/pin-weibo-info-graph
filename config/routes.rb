@@ -21,7 +21,15 @@ PinWorkResultsShow::Application.routes.draw do
       get :word_stats
     end
   end
+  # end of weibo users
 
+  
+  # begin of weibo comments
+  resources :weibo_comments do
+    collection do
+    end
+  end
+  # end of weibo comments
 
 
 end

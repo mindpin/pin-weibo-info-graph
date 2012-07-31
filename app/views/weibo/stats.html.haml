@@ -1,3 +1,6 @@
+- hbreadcrumb '首页', '/'
+- hbreadcrumb '微博统计', '#'
+
 .page-weibo-stats-query
   = form_tag '/weibo/stats', :method => 'get' do
     .field
@@ -6,8 +9,8 @@
     .field
       %label= "要采集的微博条数"
       = text_field_tag 'count', @count
-    .field
-      = submit_tag "采集"
+    .field.submit
+      %a.form-submit-button{:href=>'javascript:;'} 采集
 
 - unless @weibo_user.nil?
   .page-weibo-stats-result

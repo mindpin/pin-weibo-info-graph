@@ -1,0 +1,21 @@
+.page-weibo-comments-query
+  = form_tag '/weibo_comments', :method => 'get' do
+    .field
+      %span= "用户名"
+      = text_field_tag 'screen_name', @screen_name
+
+    .field
+      = submit_tag "查询评论数量"
+
+
+
+.page-weibo-comments
+  %ul
+    - unless @comments.nil?
+      - @comments.each do |comment|
+        %li
+          %p= comment.text
+          %p= comment.weibo_status.text
+
+
+

@@ -8,7 +8,7 @@ body{
   color:#D5D5D5; $body-color:#D5D5D5;
 
   a{
-    color:#666;
+    color:#ffd75f;
     @include transition(all cubic-bezier(0.25, 0.1, 0.25, 1) 0.3s);
     &:hover{color:white;text-decoration:none;}
   }

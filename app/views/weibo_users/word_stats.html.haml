@@ -1,8 +1,9 @@
+- hbreadcrumb '首页', '/'
+- hbreadcrumb "微博用户：#{@weibo_user.screen_name}", "/weibo_users/#{@weibo_user.weibo_user_id}"
+- hbreadcrumb '分词统计', '#'
+
 .page-weibo-word-stats
-  %ul
-    - @top_20_words.each do |word|
-      %li
-        %span.word{:style=>'margin-right:20px;'}= word[0]
-        %span.stat{:style=>'color:#ffd75f'}= word[1]
-
-
+  - @top_20_words.each do |word|
+    .word-stat
+      .word{:style=>'margin-right:20px;'}= word[0]
+      .stat{:style=>'color:#ffd75f'}= word[1]

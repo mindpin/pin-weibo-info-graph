@@ -50,3 +50,5 @@ module PinWorkResultsShow
 
   end
 end
+
+require File.join(Rails.root, 'lib/mindpin_global_methods.rb')

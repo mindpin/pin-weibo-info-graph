@@ -16,6 +16,14 @@
 
   %body.echo.gray
     .page-sider
+      .head
+        .title
+          %a{:href=>'/'} 新浪微博采集分析器
+          .version dev.0731
+      .nav
+        %a.item{:href=>'/'} 首页
+        %a.item{:href=>'/weibo_users'} 本地微博用户
+
     .page-topbar
       .page-breadcrumb
         = yield :breadcrumb

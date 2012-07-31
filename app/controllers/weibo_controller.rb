@@ -7,8 +7,12 @@ class WeiboController < ApplicationController
     unless current_user.weibo_auth.nil?
       @client = current_user.get_weibo_client
       if @client.is_authorized?
-        response = @client.account.get_uid
-        @weibo_user = @client.users.show(response.parsed).parsed
+        begin
+          response = @client.account.get_uid
+          @weibo_user = @client.users.show(response.parsed).parsed
+        rescue  
+          puts 'I am rescued.'  
+        end
       end
     end
 

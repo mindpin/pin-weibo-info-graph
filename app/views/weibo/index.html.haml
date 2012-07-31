@@ -1,16 +1,21 @@
+- hbreadcrumb '首页', '#'
+
 - if current_user.weibo_auth.nil? || @weibo_user.nil? ||  !@client.is_authorized?
   .page-weibo-register    
-    =link_to "使用微博登录", @new_client.auth_code.authorize_url(:response_type => "code")
+    = link_to "使用微博登录", @new_client.auth_code.authorize_url(:response_type => "code")
 - else
   .page-weibo-notice
-    已经连接到微博
-    
-    %span
-      =link_to "微博信息统计", "/weibo/stats"
+    .desc 已经连接到微博
+    .to-stat= link_to '统计微博信息', "/weibo/stats"
+
   .page-weibo-account
-    = image_tag(@weibo_user['avatar_large'])
-    = @weibo_user['screen_name']
+    .head
+      .avatar= image_tag(@weibo_user['avatar_large'])
+      .name= @weibo_user['screen_name']
 
     = form_tag '/weibo', :method => 'create' do
-      = text_area_tag 'content', nil, :rows => 6, :cols => 45
-      = submit_tag "发送微博"
+      .field
+        %label 微博正文
+        = text_area_tag 'content', nil, :rows => 6, :cols => 45
+      .field.submit
+        %a.form-submit-button{:href=>'javascript:;'} 提交

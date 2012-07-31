@@ -26,3 +26,26 @@
 .page-weibo-stats-query{
   margin-bottom:20px;
 }
+
+.page-weibo-notice{
+  margin-bottom:20px;
+}
+
+.page-weibo-account{
+  .head{
+    margin-bottom:20px;
+  }
+}
+
+.page-weibo-word-stats{
+  .word-stat{
+    @include floatfix;
+    font-size:16px;
+    .word{
+      float:left;width:100px;
+    }
+    .stat{
+      float:left;
+    }
+  }
+}

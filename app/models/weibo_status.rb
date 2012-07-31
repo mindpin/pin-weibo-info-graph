@@ -5,7 +5,7 @@ class WeiboStatus < ActiveRecord::Base
              :class_name => 'WeiboUser', 
              :foreign_key => :weibo_user_id, :primary_key => :weibo_status_id
 
-  # has_many :weibo_statuses, :class_name => 'WeiboStatus', :foreign_key => :retweeted_status_id
+  has_many :weibo_comments, :class_name => 'WeiboComment', :foreign_key => :weibo_status_id
 
   #set_primary_key :weibo_status_id # 重新设置关联主键，不使用默认的 id 字段
   
