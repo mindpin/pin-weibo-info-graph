@@ -27,8 +27,11 @@ PinWorkResultsShow::Application.routes.draw do
   # begin of weibo comments
   resources :weibo_comments do
     collection do
+      get :by_me
     end
   end
+
+  put  '/weibo_comments/:weibo_status_id/refresh'        => 'weibo_comments#refresh'
   # end of weibo comments
 
 

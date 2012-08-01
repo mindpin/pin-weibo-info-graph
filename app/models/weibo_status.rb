@@ -47,33 +47,42 @@ class WeiboStatus < ActiveRecord::Base
     
     unless weibo_statuses.nil?
       weibo_statuses.each do |weibo|
-
-        retweeted_status = weibo['retweeted_status'].nil?? '': weibo['retweeted_status']
-        weibo_user_id = weibo['user'].nil?? '': weibo['user']['id']
-
-        # 创建 WeiboStatus 记录
-        WeiboStatus.create(
-          :weibo_status_id => weibo['id'],
-          :weibo_user_id => weibo_user_id,
-          :text => weibo['text'],
-          :retweeted_status_id => retweeted_status['id'],
-          :bmiddle_pic => weibo['bmiddle_pic'],
-          :original_pic => weibo['original_pic'],
-          :thumbnail_pic => weibo['thumbnail_pic'],
-          :json => weibo.to_json
-        )
-
-        # 根据 retweeted_status 再创新新的 WeiboStatus 记录
-        create_retweeted_status(retweeted_status)
-
-        # 创建微博用户
-        create_weibo_user(weibo)
+        save_new(weibo)
       end
 
     end
     
   end
   # end of store_weibo_statuses
+
+
+  def self.save_new(weibo)
+    if weibo.blank?
+      return
+    end
+    
+    retweeted_status = weibo['retweeted_status'].nil?? '': weibo['retweeted_status']
+    weibo_user_id = weibo['user'].nil?? '': weibo['user']['id']
+
+    # 创建 WeiboStatus 记录
+    WeiboStatus.create(
+      :weibo_status_id => weibo['id'],
+      :weibo_user_id => weibo_user_id,
+      :text => weibo['text'],
+      :retweeted_status_id => retweeted_status['id'],
+      :bmiddle_pic => weibo['bmiddle_pic'],
+      :original_pic => weibo['original_pic'],
+      :thumbnail_pic => weibo['thumbnail_pic'],
+      :json => weibo.to_json
+    )
+
+    # 根据 retweeted_status 再创新新的 WeiboStatus 记录
+    create_retweeted_status(retweeted_status)
+
+    # 创建微博用户
+    create_weibo_user(weibo)
+  end
+  # end of save_new
 
   
   # begin 根据 retweeted_status 字段 创建新的 WeiboStatus
