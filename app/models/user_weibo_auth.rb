@@ -33,7 +33,7 @@ class UserWeiboAuth < ActiveRecord::Base
           :auth_code => auth_code, 
           :token => client.token.token, 
           :expires_in => client.token.expires_in,
-          :uid => response['uid']
+          :weibo_user_id => response['uid']
         )
       end
       # end set_new_weibo_auth
