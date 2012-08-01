@@ -29,6 +29,8 @@ PinWorkResultsShow::Application.routes.draw do
     collection do
     end
   end
+
+  put  '/weibo_comments/:weibo_status_id/refresh'        => 'weibo_comments#refresh'
   # end of weibo comments
 
 

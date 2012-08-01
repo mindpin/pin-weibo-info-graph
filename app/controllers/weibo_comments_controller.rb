@@ -22,4 +22,10 @@ class WeiboCommentsController < ApplicationController
     @weibo_comments = WeiboComment.find_all_by_weibo_status_id(params[:id])
   end
 
+
+  def refresh
+    WeiboComment.update_by_weibo_status_id(current_user, params[:weibo_status_id])
+    redirect_to :back
+  end
+
 end

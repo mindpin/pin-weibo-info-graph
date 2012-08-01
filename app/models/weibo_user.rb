@@ -63,5 +63,8 @@ class WeiboUser < ActiveRecord::Base
   end
   # end of store_comments
 
+
+  
+
  
 end
