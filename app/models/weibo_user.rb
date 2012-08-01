@@ -48,23 +48,5 @@ class WeiboUser < ActiveRecord::Base
   end
   # end of get_all_comments
 
-
-  def store_comments(comments)
-    unless comments.nil?
-      comments.each do |comment|
-        WeiboComment.create(
-          :weibo_comment_id => comment['idstr'],
-          :text => comment['text'],
-          :weibo_user_id => comment['user']['idstr'],
-          :weibo_status_id => comment['status']['idstr']
-        )
-      end
-    end
-  end
-  # end of store_comments
-
-
-  
-
  
 end

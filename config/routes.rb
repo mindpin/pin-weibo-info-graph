@@ -27,6 +27,7 @@ PinWorkResultsShow::Application.routes.draw do
   # begin of weibo comments
   resources :weibo_comments do
     collection do
+      get :by_me
     end
   end
 
