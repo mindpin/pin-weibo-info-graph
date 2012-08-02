@@ -28,6 +28,7 @@ PinWorkResultsShow::Application.routes.draw do
   resources :weibo_comments do
     collection do
       get :by_me
+      get :stats3
     end
   end
 

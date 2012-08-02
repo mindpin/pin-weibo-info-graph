@@ -36,14 +36,29 @@ class WeiboCommentsController < ApplicationController
       @count = params[:count].to_i
 
       # 根据 api 从微博采集我的评论
-      comments = WeiboComment.get_my_comments_by_count(current_user, @count)
+      begin
+        comments = WeiboComment.get_my_comments_by_count(current_user, @count)
 
-      # 评论保存到数据库
-      WeiboComment.save_comments(comments)
+        # 评论保存到数据库
+        WeiboComment.save_comments(comments)
+      rescue
+        p 'weibo error'
+      end
+
     end
     
     # 把我所有发出的评论从数据表拿出来显示在view上
     @my_comments = current_user.weibo_auth.weibo_comments
+  end
+
+
+  # 按星期分组，统计我发出的评论与其它用户的互动
+  def stats3
+    @week_comments = current_user.weibo_auth.group_comments_by_week
+
+    #p @week_comments
+
+    # render :nothing => true
   end
 
 end
