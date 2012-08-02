@@ -8,27 +8,19 @@ class UserWeiboAuth < ActiveRecord::Base
 
 
   def group_comments_by_week
+    week_comments = []
     comments = self.weibo_comments
 
-    start_date = comments[0].created_at.strftime('%Y-%m-%d')
-    end_date = comments[comments.length - 1].created_at.strftime('%Y-%m-%d')
-    start_week_day = comments[0].created_at.wday
-    end_week_day = comments[comments.length - 1].created_at.wday
-
-    #p start_date
-    #p end_date
-
-    total_days = (Date.parse(end_date) - Date.parse(start_date)).round
-
-    #p total_days
+    start_date = Date.parse(comments[0].created_at.to_s)
+    end_date = Date.parse(comments[comments.length - 1].created_at.to_s)
     
-    week_comments = []
-    first_week_days = 7 - start_week_day
-    if first_week_days > total_days
+    first_week_days = 7 - comments[0].created_at.wday
+    end_week_date = start_date + first_week_days
+
+    if end_week_date >= end_date
       week_comments << comments
     else
       temp_comments = []
-      end_week_date = Date.parse(comments[0].created_at.to_s) + first_week_days
       comments.each do |comment|
         if comment.created_at <= end_week_date
           temp_comments << comment
@@ -36,13 +28,13 @@ class UserWeiboAuth < ActiveRecord::Base
       end
 
       week_comments << temp_comments
-      week_comments = self.divide_week_comments(total_days, week_comments, comments)
+      week_comments = self.divide_week_comments(week_comments, comments)
     end
 
     week_comments
   end
 
-  def divide_week_comments(total_days, week_comments, comments)
+  def divide_week_comments(week_comments, comments)
     last_week_comments = week_comments[week_comments.length - 1]
     end_week_date = Date.parse(last_week_comments[last_week_comments.length - 1].created_at.to_s) + 7
     end_date = Date.parse(comments[comments.length - 1].created_at.to_s)
@@ -61,7 +53,7 @@ class UserWeiboAuth < ActiveRecord::Base
         end
       end
       week_comments << temp_comments
-      self.divide_week_comments(total_days, week_comments, comments)
+      self.divide_week_comments(week_comments, comments)
     else
       end_week_date = last_week_date + 6
       comments.each do |comment|
