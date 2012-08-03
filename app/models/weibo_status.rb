@@ -1,5 +1,7 @@
 class WeiboStatus < ActiveRecord::Base
-  belongs_to :retweeted_status, :class_name => 'WeiboStatus', :foreign_key => :retweeted_status_id
+  belongs_to :retweeted_status, :class_name => 'WeiboStatus', 
+             :foreign_key => :retweeted_status_id, 
+             :primary_key => :weibo_status_id
 
   belongs_to :weibo_user, 
              :class_name => 'WeiboUser', 

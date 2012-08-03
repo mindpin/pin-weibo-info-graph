@@ -34,3 +34,5 @@ def truncate_u(_text, length = 30, truncate_string = '...')
 
   return text
 end
+
+

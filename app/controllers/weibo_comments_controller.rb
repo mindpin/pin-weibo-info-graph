@@ -54,10 +54,16 @@ class WeiboCommentsController < ApplicationController
 
   # 按星期分组，统计我发出的评论与其它用户的互动
   def stats3
+    # 当前登录用户发出的评论按星期分组
     @week_comments = current_user.weibo_auth.group_comments_by_week
 
-    @week_statuses = current_user.weibo_auth.weibo_user.group_statuses_by_week
-    #render :nothing => true
+    # 当前登录用户转发的微博
+    @retweeted_statuses = current_user.weibo_auth.weibo_user.retweeted_statuses
+
+    # 当前登录用户转发的微博按星期分组
+    @week_retweeted_statuses = current_user.weibo_auth.weibo_user.group_statuses_by_week
+
+    p @week_retweeted_statuses
   end
 
 end
