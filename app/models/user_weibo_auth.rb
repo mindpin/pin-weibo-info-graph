@@ -46,14 +46,19 @@ class UserWeiboAuth < ActiveRecord::Base
     week_comments = []
     comments = self.weibo_comments
 
+    p 999999
+
     if comments.nil? || !comments.any?
-      return
+      return {}
     end
+
+
+    p 88888
 
     start_date = Date.parse(comments.first.comment_created_at.to_s)
     end_date = Date.parse(comments.last.comment_created_at.to_s)
     
-    first_week_days = 7 - comments[0].created_at.wday
+    first_week_days = 7 - comments.first.created_at.wday
     end_week_date = start_date + first_week_days
 
     if end_week_date >= end_date
@@ -72,6 +77,8 @@ class UserWeiboAuth < ActiveRecord::Base
 
     week_comments
   end
+  # end of group_comments_by_week
+
 
   def divide_week_comments(week_comments, comments)
     last_week_comments = week_comments.last
@@ -106,6 +113,7 @@ class UserWeiboAuth < ActiveRecord::Base
       
     end
   end
+  # end of divide_week_comments
 
 
   # --- 给其他类扩展的方法

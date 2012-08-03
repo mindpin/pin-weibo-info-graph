@@ -62,8 +62,6 @@ class WeiboCommentsController < ApplicationController
 
     # 当前登录用户转发的微博按星期分组
     @week_retweeted_statuses = current_user.weibo_auth.weibo_user.group_statuses_by_week
-
-    p @week_retweeted_statuses
   end
 
 end

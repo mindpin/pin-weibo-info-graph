@@ -10,7 +10,7 @@ module WeiboCommentsHelper
 
   def interactive_by_week_comments(week_comments)
     if week_comments.nil?
-      return
+      return {}
     end
 
     weeks = Hash.new(0)
