@@ -9,8 +9,12 @@ class WeiboStatus < ActiveRecord::Base
 
   has_many :weibo_comments, :class_name => 'WeiboComment', :foreign_key => :weibo_status_id
 
+
+  # 验证
   validates_uniqueness_of :weibo_status_id
 
+
+  # scope
   default_scope order('weibo_status_id DESC')
 
 

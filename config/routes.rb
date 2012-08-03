@@ -19,6 +19,7 @@ PinWorkResultsShow::Application.routes.draw do
   resources :weibo_users do
     member do
       get :word_stats
+      get :refresh
     end
   end
   # end of weibo users

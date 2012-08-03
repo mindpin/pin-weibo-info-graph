@@ -2,7 +2,7 @@ class UserWeiboAuth < ActiveRecord::Base
   belongs_to :user, :class_name => 'User', :foreign_key => 'user_id'
 
   has_many :weibo_comments, 
-           :class_name => 'WeiboComment', :order => 'created_at',
+           :class_name => 'WeiboComment',
            :foreign_key => :weibo_user_id, :primary_key => :weibo_user_id
 
   
