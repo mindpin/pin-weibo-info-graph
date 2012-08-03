@@ -1,7 +1,14 @@
 class WeiboUser < ActiveRecord::Base
   has_many :weibo_statuses, 
-           :class_name => 'WeiboStatus', 
+           :class_name => 'WeiboStatus', :order => 'created_at',
            :foreign_key => :weibo_user_id, :primary_key => :weibo_user_id
+
+
+  has_many :retweeted_statuses, 
+           :class_name => 'WeiboStatus', :order => 'created_at',
+           :foreign_key => :weibo_user_id, :primary_key => :weibo_user_id,
+           :conditions => ["retweeted_status_id != ''"]
+
 
   validates_uniqueness_of :weibo_user_id
 
@@ -47,6 +54,72 @@ class WeiboUser < ActiveRecord::Base
     comments
   end
   # end of get_all_comments
+
+
+
+  def group_statuses_by_week
+    week_statuses = []
+    statuses = self.retweeted_statuses
+
+    start_date = Date.parse(statuses[0].created_at.to_s)
+    end_date = Date.parse(statuses[statuses.length - 1].created_at.to_s)
+    
+    first_week_days = 7 - statuses[0].created_at.wday
+    end_week_date = start_date + first_week_days
+
+    if end_week_date >= end_date
+      week_statuses << statuses
+    else
+      temp_statuses = []
+      statuses.each do |status|
+        if status.created_at <= end_week_date
+          temp_statuses << status
+        end
+      end
+
+      week_statuses << temp_statuses
+      week_statuses = self.divide_week_statuses(week_statuses, statuses)
+    end
+
+    week_statuses
+    
+  end
+
+  def divide_week_statuses(week_statuses, statuses)
+    last_week_statuses = week_statuses[week_statuses.length - 1]
+    end_week_date = Date.parse(last_week_statuses[last_week_statuses.length - 1].created_at.to_s) + 7
+    end_date = Date.parse(statuses[statuses.length - 1].created_at.to_s)
+
+
+    temp_statuses = []
+    last_week_date = Date.parse(last_week_statuses[last_week_statuses.length - 1].created_at.to_s)
+
+
+    if end_week_date < end_date
+      
+      statuses.each do |status|
+        current_date = Date.parse(status.created_at.to_s)
+        if current_date > last_week_date && current_date <= end_week_date
+          temp_statuses << status
+        end
+      end
+      week_statuses << temp_statuses
+      self.divide_week_statuses(week_statuses, statuses)
+    else
+      end_week_date = last_week_date + 6
+      statuses.each do |status|
+        current_date = Date.parse(status.created_at.to_s)
+        if current_date > last_week_date && current_date <= end_week_date
+          temp_statuses << status
+        end
+      end
+      week_statuses << temp_statuses
+      return week_statuses
+      
+    end
+  end
+
+
 
  
 end

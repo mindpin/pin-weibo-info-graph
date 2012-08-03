@@ -56,9 +56,8 @@ class WeiboCommentsController < ApplicationController
   def stats3
     @week_comments = current_user.weibo_auth.group_comments_by_week
 
-    #p @week_comments
-
-    # render :nothing => true
+    @week_statuses = current_user.weibo_auth.weibo_user.group_statuses_by_week
+    #render :nothing => true
   end
 
 end

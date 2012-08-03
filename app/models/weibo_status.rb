@@ -1,5 +1,5 @@
 class WeiboStatus < ActiveRecord::Base
-  #belongs_to :retweeted_status, :class_name => 'WeiboStatus', :foreign_key => :retweeted_status_id
+  belongs_to :retweeted_status, :class_name => 'WeiboStatus', :foreign_key => :retweeted_status_id
 
   belongs_to :weibo_user, 
              :class_name => 'WeiboUser', 
@@ -17,7 +17,7 @@ class WeiboStatus < ActiveRecord::Base
     client = user.get_weibo_client
 
     if count <= 20
-      user_weibo = client.statuses.user_timeline(:screen_name => screen_name, :page => 1, :count => count).parsed
+      user_weibo = client.statuses.user_timeline(:screen_name => screen_name, :page => 1, :count => 20).parsed
       return user_weibo['statuses']
     end
 
@@ -126,5 +126,7 @@ class WeiboStatus < ActiveRecord::Base
 
   end
   # end create_weibo_user
+
+
 
 end

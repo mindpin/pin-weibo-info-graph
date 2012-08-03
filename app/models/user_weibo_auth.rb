@@ -6,6 +6,10 @@ class UserWeiboAuth < ActiveRecord::Base
            :foreign_key => :weibo_user_id, :primary_key => :weibo_user_id
 
 
+  has_one :weibo_user, :class_name => 'WeiboUser', 
+          :foreign_key => :weibo_user_id, :primary_key => :weibo_user_id
+
+
 
   def group_comments_by_week
     week_comments = []
@@ -90,13 +94,16 @@ class UserWeiboAuth < ActiveRecord::Base
         end
 
         response = client.account.get_uid.parsed
+        user = client.users.show(response).parsed
 
         UserWeiboAuth.create(
           :user => self, 
           :auth_code => auth_code, 
           :token => client.token.token, 
           :expires_in => client.token.expires_in,
-          :weibo_user_id => response['uid']
+          :weibo_user_id => response['uid'],
+          :screen_name => user['screen_name'],
+          :avatar => user['avatar_large']
         )
       end
       # end set_new_weibo_auth
