@@ -1,27 +1,23 @@
 - hbreadcrumb '首页', '/'
 - hbreadcrumb "统计分析: 评论转发趋势", '#'
 
-.page-weibo-comments
+.page-weibo-retweeted
+  = "转发微博条数为 #{@retweeted_statuses.length}"
 
-  - if !@week_comments.blank?
-    
-    - @week_comments.each do |week|
-      :ruby
-        start_date = week[0].created_at.strftime('%Y-%m-%d')
-        end_date = week[week.length - 1].created_at.strftime('%Y-%m-%d')
-        start_week_day = week[0].created_at.wday
-        end_week_day = week[week.length - 1].created_at.wday
 
-      .comments
+.page-weibo-interactive-users
+  :ruby
+    year = Time.now.year
+    weibo_users = interactive_by_comments_and_retweeted(@week_comments, @week_retweeted_statuses)
+  
+  %ul
+  - unless weibo_users.nil?
+    - weibo_users.each do |week|
+      %li
+        %label= week_dates(year, week[0])
+        %ul
+        - week[1].each do |user|
+          :ruby
+            weibo_user = WeiboUser.find_by_weibo_user_id(user[0])
+          %li= "#{weibo_user.screen_name}, #{user[1]}"
 
-        .week-title
-          .text= "#{start_date}  星期#{start_week_day}"
-          .text= "#{end_date} 星期#{end_week_day}"
-
-        - week.each do |comment|
-
-          .comment
-            .text= comment.text
-
-  - else
-    本地没有任何评论数据
