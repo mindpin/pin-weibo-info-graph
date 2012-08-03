@@ -37,4 +37,11 @@ PinWorkResultsShow::Application.routes.draw do
   # end of weibo comments
 
 
+  resources :temp do
+    collection do
+      get :fix_date
+    end
+  end
+
+
 end

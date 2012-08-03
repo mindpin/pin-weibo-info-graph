@@ -9,6 +9,9 @@ module WeiboCommentsHelper
   end
 
   def interactive_by_week_comments(week_comments)
+    if week_comments.nil?
+      return
+    end
 
     weeks = Hash.new(0)
     week_comments.each do |week|
@@ -28,6 +31,10 @@ module WeiboCommentsHelper
 
 
   def interactive_by_week_retweeted(week_retweeted_statuses)
+    if week_retweeted_statuses.nil?
+      return
+    end
+
     weeks = Hash.new(0)
     week_retweeted_statuses.each do |week|
       weibo_users = Hash.new(0)
@@ -48,6 +55,14 @@ module WeiboCommentsHelper
   def interactive_by_comments_and_retweeted(week_comments, week_retweeted_statuses)
     comment_users = interactive_by_week_comments(week_comments)
     retweeted_users = interactive_by_week_retweeted(week_retweeted_statuses)
+
+    if comment_users.nil?
+      return retweeted_users unless retweeted_users.nil?
+    end
+
+    if retweeted_users.nil?
+      return comment_users unless comment_users.nil?
+    end
 
     #p comment_users
     #p retweeted_users

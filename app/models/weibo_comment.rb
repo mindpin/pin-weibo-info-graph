@@ -12,7 +12,7 @@ class WeiboComment < ActiveRecord::Base
 
   def self.update_by_weibo_status_id(client_user, weibo_status_id)
     if weibo_status_id.nil?
-      return
+      return {}
     end
 
     client = client_user.get_weibo_client
@@ -31,11 +31,14 @@ class WeiboComment < ActiveRecord::Base
     unless comments.nil?
       comments.each do |comment|
 
+        comment_created_at = Date.parse(comment['created_at']).to_s
+
         WeiboComment.create(
           :weibo_comment_id => comment['idstr'],
           :text => comment['text'],
           :weibo_user_id => comment['user']['idstr'],
-          :weibo_status_id => comment['status']['idstr']
+          :weibo_status_id => comment['status']['idstr'],
+          :comment_created_at => comment_created_at
         )
 
         WeiboStatus.save_new(comment['status'])

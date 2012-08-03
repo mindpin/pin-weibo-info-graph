@@ -69,10 +69,14 @@ class WeiboUser < ActiveRecord::Base
     week_statuses = []
     statuses = self.retweeted_statuses
 
-    start_date = Date.parse(statuses[0].created_at.to_s)
-    end_date = Date.parse(statuses[statuses.length - 1].created_at.to_s)
+    if statuses.nil? || !statuses.any?
+      return {}
+    end
+
+    start_date = Date.parse(statuses.first.status_created_at.to_s)
+    end_date = Date.parse(statuses.last.status_created_at.to_s)
     
-    first_week_days = 7 - statuses[0].created_at.wday
+    first_week_days = 7 - statuses.first.status_created_at.wday
     end_week_date = start_date + first_week_days
 
     if end_week_date >= end_date
@@ -80,7 +84,7 @@ class WeiboUser < ActiveRecord::Base
     else
       temp_statuses = []
       statuses.each do |status|
-        if status.created_at <= end_week_date
+        if status.status_created_at <= end_week_date
           temp_statuses << status
         end
       end
@@ -94,19 +98,19 @@ class WeiboUser < ActiveRecord::Base
   end
 
   def divide_week_statuses(week_statuses, statuses)
-    last_week_statuses = week_statuses[week_statuses.length - 1]
-    end_week_date = Date.parse(last_week_statuses[last_week_statuses.length - 1].created_at.to_s) + 7
-    end_date = Date.parse(statuses[statuses.length - 1].created_at.to_s)
+    last_week_statuses = week_statuses.last
+    end_week_date = Date.parse(last_week_statuses.last.status_created_at.to_s) + 7
+    end_date = Date.parse(statuses.last.status_created_at.to_s)
 
 
     temp_statuses = []
-    last_week_date = Date.parse(last_week_statuses[last_week_statuses.length - 1].created_at.to_s)
+    last_week_date = Date.parse(last_week_statuses.last.status_created_at.to_s)
 
 
     if end_week_date < end_date
       
       statuses.each do |status|
-        current_date = Date.parse(status.created_at.to_s)
+        current_date = Date.parse(status.status_created_at.to_s)
         if current_date > last_week_date && current_date <= end_week_date
           temp_statuses << status
         end
@@ -116,7 +120,7 @@ class WeiboUser < ActiveRecord::Base
     else
       end_week_date = last_week_date + 6
       statuses.each do |status|
-        current_date = Date.parse(status.created_at.to_s)
+        current_date = Date.parse(status.status_created_at.to_s)
         if current_date > last_week_date && current_date <= end_week_date
           temp_statuses << status
         end

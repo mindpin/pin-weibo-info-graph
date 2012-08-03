@@ -5,18 +5,24 @@ class UserWeiboAuth < ActiveRecord::Base
            :class_name => 'WeiboComment', :order => 'created_at',
            :foreign_key => :weibo_user_id, :primary_key => :weibo_user_id
 
+  
+
+  has_one :weibo_user, :class_name => 'WeiboUser', 
+          :foreign_key => :weibo_user_id, :primary_key => :weibo_user_id
+
+
+
   def weibo_client
     Weibo2::Client.from_hash(:access_token => self.token, :expires_in => self.expires_in)
   end
 
-  has_one :weibo_user, :class_name => 'WeiboUser', 
-          :foreign_key => :weibo_user_id, :primary_key => :weibo_user_id
+
   def get_my_comments_by_count(count)
     client = self.weibo_client
 
     current_page = 1
     if count <= 20
-      response = client.comments.by_me(:page => current_page, :count => count).parsed
+      response = client.comments.by_me(:page => current_page, :count => 20).parsed
       comments = response['comments']
     else
       comments = []
@@ -40,8 +46,12 @@ class UserWeiboAuth < ActiveRecord::Base
     week_comments = []
     comments = self.weibo_comments
 
-    start_date = Date.parse(comments[0].created_at.to_s)
-    end_date = Date.parse(comments[comments.length - 1].created_at.to_s)
+    if comments.nil? || !comments.any?
+      return
+    end
+
+    start_date = Date.parse(comments.first.comment_created_at.to_s)
+    end_date = Date.parse(comments.last.comment_created_at.to_s)
     
     first_week_days = 7 - comments[0].created_at.wday
     end_week_date = start_date + first_week_days
@@ -51,7 +61,7 @@ class UserWeiboAuth < ActiveRecord::Base
     else
       temp_comments = []
       comments.each do |comment|
-        if comment.created_at <= end_week_date
+        if comment.comment_created_at <= end_week_date
           temp_comments << comment
         end
       end
@@ -64,19 +74,19 @@ class UserWeiboAuth < ActiveRecord::Base
   end
 
   def divide_week_comments(week_comments, comments)
-    last_week_comments = week_comments[week_comments.length - 1]
-    end_week_date = Date.parse(last_week_comments[last_week_comments.length - 1].created_at.to_s) + 7
-    end_date = Date.parse(comments[comments.length - 1].created_at.to_s)
+    last_week_comments = week_comments.last
+    end_week_date = Date.parse(last_week_comments.last.comment_created_at.to_s) + 7
+    end_date = Date.parse(comments.last.comment_created_at.to_s)
 
 
     temp_comments = []
-    last_week_date = Date.parse(last_week_comments[last_week_comments.length - 1].created_at.to_s)
+    last_week_date = Date.parse(last_week_comments.last.comment_created_at.to_s)
 
 
     if end_week_date < end_date
       
       comments.each do |comment|
-        current_date = Date.parse(comment.created_at.to_s)
+        current_date = Date.parse(comment.comment_created_at.to_s)
         if current_date > last_week_date && current_date <= end_week_date
           temp_comments << comment
         end
@@ -86,7 +96,7 @@ class UserWeiboAuth < ActiveRecord::Base
     else
       end_week_date = last_week_date + 6
       comments.each do |comment|
-        current_date = Date.parse(comment.created_at.to_s)
+        current_date = Date.parse(comment.comment_created_at.to_s)
         if current_date > last_week_date && current_date <= end_week_date
           temp_comments << comment
         end
