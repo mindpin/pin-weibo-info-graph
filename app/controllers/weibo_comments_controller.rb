@@ -37,7 +37,7 @@ class WeiboCommentsController < ApplicationController
 
       # 根据 api 从微博采集我的评论
       begin
-        comments = WeiboComment.get_my_comments_by_count(current_user, @count)
+        comments = current_user.weibo_auth.get_my_comments_by_count(@count)
 
         # 评论保存到数据库
         WeiboComment.save_comments(comments)
