@@ -23,7 +23,8 @@ class WeiboController < ApplicationController
     client = Weibo2::Client.from_code(code)
 
     if client.is_authorized?
-      current_user.set_new_weibo_auth(code, client.token.token, client.token.expires_in)
+      # current_user.set_new_weibo_auth(code, client.token.token, client.token.expires_in)
+      current_user.set_new_weibo_auth(code, client)
     end
 
     redirect_to "/weibo"
