@@ -1,8 +1,7 @@
 module WeiboCommentsHelper
 
   # 根据当前第几周，返回日期范围
-  def week_dates( week_num )
-      year = Time.now.year
+  def week_dates( year,  week_num )
       week_start = Date.commercial( year, week_num, 1 )
       week_end = Date.commercial( year, week_num, 7 )
       week_start.strftime( "%m/%d/%y" ) + ' - ' + week_end.strftime( 

@@ -7,13 +7,14 @@
 
 .page-weibo-interactive-users
   :ruby
+    year = Time.now.year
     weibo_users = interactive_by_comments_and_retweeted(@week_comments, @week_retweeted_statuses)
   
   %ul
   - unless weibo_users.nil?
     - weibo_users.each do |week|
       %li
-        %label= week_dates(week[0])
+        %label= week_dates(year, week[0])
         %ul
         - week[1].each do |user|
           :ruby
