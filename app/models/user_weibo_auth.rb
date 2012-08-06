@@ -44,92 +44,9 @@ class UserWeiboAuth < ActiveRecord::Base
 
 
   def group_comments
-    year_comments = {}
-    comments = self.weibo_comments
-
-    first_comment_year = comments.first.comment_created_at.year
-    last_comment_year = comments.last.comment_created_at.year
-
-    if first_comment_year == last_comment_year
-      year_comments[first_comment_year] = comments
-    else
-      comments.each do |comment|
-        year = comment.comment_created_at.year
-        (year_comments[year] ||= []) << comment
-      end
-    end
-
-    year_comments.each do |year, comments|
-      year_comments[year] = group_year_comments_by_week(comments)
-    end
-
-    year_comments
+    WeiboStatistics.group_data(self.weibo_comments)
   end
 
-
-  def group_year_comments_by_week(comments)
-    week_comments = []
-    
-
-    start_date = Date.parse(comments.first.comment_created_at.to_s)
-    end_date = Date.parse(comments.last.comment_created_at.to_s)
-    
-    first_week_days = 7 - comments.first.created_at.wday
-    end_week_date = start_date + first_week_days
-
-    if end_week_date >= end_date
-      week_comments << comments
-    else
-      temp_comments = []
-      comments.each do |comment|
-        if comment.comment_created_at <= end_week_date
-          temp_comments << comment
-        end
-      end
-
-      week_comments << temp_comments
-      week_comments = self.divide_week_comments(week_comments, comments)
-    end
-
-    week_comments
-  end
-  # end of group_comments_by_week
-
-
-  def divide_week_comments(week_comments, comments)
-    last_week_comments = week_comments.last
-    end_week_date = Date.parse(last_week_comments.last.comment_created_at.to_s) + 7
-    end_date = Date.parse(comments.last.comment_created_at.to_s)
-
-
-    temp_comments = []
-    last_week_date = Date.parse(last_week_comments.last.comment_created_at.to_s)
-
-
-    if end_week_date < end_date
-      
-      comments.each do |comment|
-        current_date = Date.parse(comment.comment_created_at.to_s)
-        if current_date > last_week_date && current_date <= end_week_date
-          temp_comments << comment
-        end
-      end
-      week_comments << temp_comments
-      self.divide_week_comments(week_comments, comments)
-    else
-      end_week_date = last_week_date + 6
-      comments.each do |comment|
-        current_date = Date.parse(comment.comment_created_at.to_s)
-        if current_date > last_week_date && current_date <= end_week_date
-          temp_comments << comment
-        end
-      end
-      week_comments << temp_comments
-      return week_comments
-      
-    end
-  end
-  # end of divide_week_comments
 
 
   # --- 给其他类扩展的方法

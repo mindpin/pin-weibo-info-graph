@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120803085224) do
+ActiveRecord::Schema.define(:version => 20120806070152) do
 
   create_table "online_records", :force => true do |t|
     t.integer  "user_id"
@@ -56,13 +56,13 @@ ActiveRecord::Schema.define(:version => 20120803085224) do
   end
 
   create_table "weibo_comments", :force => true do |t|
-    t.integer  "weibo_comment_id",   :limit => 8
+    t.integer  "weibo_comment_id", :limit => 8
     t.string   "text"
-    t.integer  "weibo_user_id",      :limit => 8
-    t.integer  "weibo_status_id",    :limit => 8
+    t.integer  "weibo_user_id",    :limit => 8
+    t.integer  "weibo_status_id",  :limit => 8
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.date     "comment_created_at"
+    t.date     "weibo_created_at"
     t.text     "json"
   end
 
@@ -77,7 +77,7 @@ ActiveRecord::Schema.define(:version => 20120803085224) do
     t.text     "json"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.date     "status_created_at"
+    t.date     "weibo_created_at"
   end
 
   add_index "weibo_statuses", ["weibo_status_id"], :name => "index_weibo_statuses_on_weibo_status_id"

@@ -31,14 +31,14 @@ class WeiboComment < ActiveRecord::Base
     unless comments.nil?
       comments.each do |comment|
 
-        comment_created_at = Date.parse(comment['created_at']).to_s
+        weibo_created_at = Date.parse(comment['created_at']).to_s
 
         WeiboComment.create(
           :weibo_comment_id => comment['idstr'],
           :text => comment['text'],
           :weibo_user_id => comment['user']['idstr'],
           :weibo_status_id => comment['status']['idstr'],
-          :comment_created_at => comment_created_at,
+          :weibo_created_at => weibo_created_at,
           :json => comment.to_json
         )
 
