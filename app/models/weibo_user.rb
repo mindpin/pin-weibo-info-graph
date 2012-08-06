@@ -65,13 +65,34 @@ class WeiboUser < ActiveRecord::Base
 
 
 
-  def group_statuses_by_week
-    week_statuses = []
+
+  def group_statuses
+    year_statuses = {}
     statuses = self.retweeted_statuses
 
-    if statuses.nil? || !statuses.any?
-      return {}
+    first_status_year = statuses.first.status_created_at.year
+    last_status_year = statuses.last.status_created_at.year
+
+    if first_status_year == last_status_year
+      year_statuses[first_status_year] = statuses
+    else
+      statuses.each do |status|
+        year = status.status_created_at.year
+        (year_statuses[year] ||= []) << status
+      end
     end
+
+    year_statuses.each do |year, statuses|
+      year_statuses[year] = group_year_statuses_by_week(statuses)
+    end
+
+    year_statuses
+  end
+
+
+
+  def group_year_statuses_by_week(statuses)
+    week_statuses = []
 
     start_date = Date.parse(statuses.first.status_created_at.to_s)
     end_date = Date.parse(statuses.last.status_created_at.to_s)

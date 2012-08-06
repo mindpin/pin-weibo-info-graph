@@ -7,17 +7,24 @@
 
 .page-weibo-interactive-users
   :ruby
-    year = Time.now.year
-    weibo_users = interactive_by_comments_and_retweeted(@week_comments, @week_retweeted_statuses)
+    weibo_users = interactive_by_comments_and_retweeted(@group_comments, @group_retweeted)
   
+  %p= debug weibo_users
   %ul
   - unless weibo_users.nil?
-    - weibo_users.each do |week|
+    - weibo_users.each do |year, week_users|
       %li
-        %label= week_dates(year, week[0])
+        %label= year
+        = # debug users
+        = # debug users[year]
+
         %ul
-        - week[1].each do |user|
-          :ruby
-            weibo_user = WeiboUser.find_by_weibo_user_id(user[0])
-          %li= "#{weibo_user.screen_name}, #{user[1]}"
+        - week_users.each do |week_number, users|
+          %li= week_dates(year,  week_number)
+
+          %ul
+          - users.each do |user, count|
+            - screen_name = WeiboUser.find_by_weibo_user_id(user).screen_name
+            %li= "#{screen_name}, #{count}"
+
 

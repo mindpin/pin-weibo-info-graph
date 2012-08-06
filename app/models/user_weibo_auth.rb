@@ -42,18 +42,34 @@ class UserWeiboAuth < ActiveRecord::Base
     comments
   end
 
-  def group_comments_by_week
-    week_comments = []
+
+  def group_comments
+    year_comments = {}
     comments = self.weibo_comments
 
-    p 999999
+    first_comment_year = comments.first.comment_created_at.year
+    last_comment_year = comments.last.comment_created_at.year
 
-    if comments.nil? || !comments.any?
-      return {}
+    if first_comment_year == last_comment_year
+      year_comments[first_comment_year] = comments
+    else
+      comments.each do |comment|
+        year = comment.comment_created_at.year
+        (year_comments[year] ||= []) << comment
+      end
     end
 
+    year_comments.each do |year, comments|
+      year_comments[year] = group_year_comments_by_week(comments)
+    end
 
-    p 88888
+    year_comments
+  end
+
+
+  def group_year_comments_by_week(comments)
+    week_comments = []
+    
 
     start_date = Date.parse(comments.first.comment_created_at.to_s)
     end_date = Date.parse(comments.last.comment_created_at.to_s)
