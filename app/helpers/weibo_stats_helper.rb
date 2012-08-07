@@ -1,0 +1,2 @@
+module WeiboStatsHelper
+end

@@ -30,7 +30,6 @@ PinWorkResultsShow::Application.routes.draw do
     collection do
       get :by_me
       post :by_me_submit
-      get :stats3
     end
   end
 
@@ -38,11 +37,18 @@ PinWorkResultsShow::Application.routes.draw do
   # end of weibo comments
 
 
-  resources :temp do
+
+  # begin of stats
+  resources :weibo_stats do
     collection do
-      get :fix_date
+      # 统计分析：词汇使用趋势
+      get :stats1
+
+      # 统计分析: 评论转发趋势
+      get :stats3
     end
   end
+  # end of stats
 
 
 end
