@@ -9,7 +9,7 @@
   :ruby
     weibo_users = users_by_comments_and_retweeted(@group_comments, @group_retweeted)
   
-  %p= # debug weibo_users
+  %p= # debug @group_comments
   %ul
   - unless weibo_users.nil?
     - weibo_users.each do |year, week_users|

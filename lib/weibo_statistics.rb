@@ -89,6 +89,75 @@ class WeiboStatistics
   # end of divide_week_data
 
 
+  def self.users_by_year_data(year_data, type)
+    years = {}
+    year_data.each do |year, week_data|
+      years[year] = users_by_week_data(week_data, type)
+    end
+
+    years
+  end
+
+
+  def self.users_by_week_data(week_data, type)
+    if week_data.nil?
+      return {}
+    end
+
+    weeks = Hash.new(0)
+    week_data.each do |week|
+      weibo_users = Hash.new(0)
+
+      week_index = Date.parse(week[0].weibo_created_at.to_s).cweek
+
+      week.each do |row|
+        if type == 'comment'
+          weibo_users[row.weibo_status.weibo_user.weibo_user_id] += 1
+        else
+          weibo_users[row.retweeted_status.weibo_user_id] += 1
+        end
+      end
+
+      weeks[week_index] = weibo_users
+    end
+
+    weeks.to_hash
+
+  end
+
+
+
+  def self.statuses_by_year_data(year_data)
+    years = {}
+    year_data.each do |year, week_data|
+      years[year] = statuses_by_week_data(week_data)
+    end
+
+    years
+  end
+
+
+  def self.statuses_by_week_data(week_data)
+    if week_data.nil?
+      return {}
+    end
+
+    weeks = Hash.new(0)
+    week_data.each do |week|
+      weibo_statuses = []
+
+      week_index = Date.parse(week[0].weibo_created_at.to_s).cweek
+
+      week.each do |row|
+        weibo_statuses << row
+      end
+
+      weeks[week_index] = weibo_statuses
+    end
+
+    weeks.to_hash
+
+  end
 
 
 

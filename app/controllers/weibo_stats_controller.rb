@@ -1,6 +1,7 @@
 class WeiboStatsController < ApplicationController
   # 统计分析：词汇使用趋势
   def stats1
+    @group_words = current_user.weibo_auth.weibo_user.group_word_stats_of_statuses
   end
 
 
@@ -10,11 +11,10 @@ class WeiboStatsController < ApplicationController
     @group_comments = current_user.weibo_auth.group_comments
 
     # 当前登录用户转发的微博按星期分组
-    @group_retweeted = current_user.weibo_auth.weibo_user.group_statuses
+    @group_retweeted = current_user.weibo_auth.weibo_user.group_retweeted_statuses
 
     # 当前登录用户转发的微博
     @retweeted_statuses = current_user.weibo_auth.weibo_user.retweeted_statuses
-
   end
-  
+
 end

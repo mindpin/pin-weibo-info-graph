@@ -18,8 +18,21 @@ class WeiboUser < ActiveRecord::Base
   end
 
   def word_stats
-    words = Hash.new(0)
+    
     statuses = self.weibo_statuses
+
+    _combine_statuses(statuses)
+  end
+
+  def _prepate_text(status_text)
+    s1 = status_text.gsub /@\S+/, ''
+    # s2 = s1.gsub /http:\/\/t.cn\/\S+/, ''
+    s2 = s1.gsub /http:\/\/\S+/, ''
+  end
+
+
+  def _combine_statuses(statuses)
+    words = Hash.new(0)
 
     statuses.each do |status|
 
@@ -37,12 +50,6 @@ class WeiboUser < ActiveRecord::Base
     end
 
     words
-  end
-
-  def _prepate_text(status_text)
-    s1 = status_text.gsub /@\S+/, ''
-    # s2 = s1.gsub /http:\/\/t.cn\/\S+/, ''
-    s2 = s1.gsub /http:\/\/\S+/, ''
   end
 
   # -----------
@@ -63,11 +70,29 @@ class WeiboUser < ActiveRecord::Base
   end
   # end of get_all_comments
 
-
-
-
-  def group_statuses
+  
+  def group_retweeted_statuses
     WeiboStatistics.group_data(self.retweeted_statuses)
+  end
+
+
+  def group_word_stats_of_statuses
+    statuses = self.weibo_statuses
+
+    year_statuses = WeiboStatistics.group_data(statuses)
+    group_statuses = WeiboStatistics.statuses_by_year_data(year_statuses)
+
+    years_data = {}
+    week_words = {}
+    group_statuses.each do |year, week_data|
+      week_data.each do |week, statuses|
+        week_words[week] = _combine_statuses(statuses)
+      end
+
+      years_data[year] = week_words
+    end
+
+    years_data
   end
 
  
