@@ -31,7 +31,7 @@ class WeiboComment < ActiveRecord::Base
     unless comments.nil?
       comments.each do |comment|
 
-        weibo_created_at = Date.parse(comment['created_at']).to_s
+        weibo_created_at = Date.parse(comment['created_at']) unless comment['created_at'].blank?
 
         WeiboComment.create(
           :weibo_comment_id => comment['idstr'],
