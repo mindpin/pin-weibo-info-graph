@@ -115,8 +115,10 @@ class WeiboStatistics
 
       week.each do |row|
         if type == 'comment'
+          next if row.weibo_status.weibo_user.weibo_user_id.nil?
           weibo_users[row.weibo_status.weibo_user.weibo_user_id] += 1
         else
+          next if row.retweeted_status.weibo_user_id.nil?
           weibo_users[row.retweeted_status.weibo_user_id] += 1
         end
       end
