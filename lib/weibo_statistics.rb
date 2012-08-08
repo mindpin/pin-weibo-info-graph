@@ -91,8 +91,11 @@ class WeiboStatistics
 
   def self.users_by_year_data(year_data, type)
     years = {}
-    year_data.each do |year, week_data|
-      years[year] = users_by_week_data(week_data, type)
+    begin
+      year_data.each do |year, week_data|
+        years[year] = users_by_week_data(week_data, type)
+      end
+    rescue
     end
 
     years

@@ -2,16 +2,19 @@
 - hbreadcrumb "统计分析: 评论转发趋势", '#'
 
 .page-weibo-retweeted
-  = "转发微博条数为 #{@retweeted_statuses.length}"
+  - unless @retweeted_statuses.nil?
+    = "转发微博条数为 #{@retweeted_statuses.length}"
 
 
 .page-weibo-interactive-users
   :ruby
     weibo_users = users_by_comments_and_retweeted(@group_comments, @group_retweeted)
   
-  %p= # debug @group_comments
   %ul
-  - unless weibo_users.nil?
+  - if weibo_users.blank?
+    %li= "您还不是微博用户"
+
+  - else
     - weibo_users.each do |year, week_users|
       %li
         %label= year
