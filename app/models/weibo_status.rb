@@ -69,7 +69,7 @@ class WeiboStatus < ActiveRecord::Base
     
     retweeted_status = weibo['retweeted_status'].nil?? '': weibo['retweeted_status']
     weibo_user_id = weibo['user'].nil?? '': weibo['user']['id']
-    status_created_at = Date.parse(weibo['created_at']).to_s
+    weibo_created_at = Date.parse(weibo['created_at']).to_s
 
     # 创建 WeiboStatus 记录
     WeiboStatus.create(
@@ -80,7 +80,7 @@ class WeiboStatus < ActiveRecord::Base
       :bmiddle_pic => weibo['bmiddle_pic'],
       :original_pic => weibo['original_pic'],
       :thumbnail_pic => weibo['thumbnail_pic'],
-      :status_created_at => status_created_at,
+      :weibo_created_at => weibo_created_at,
       :json => weibo.to_json
     )
 
@@ -100,7 +100,7 @@ class WeiboStatus < ActiveRecord::Base
     end
 
     weibo_user_id = retweeted_status['user'].nil?? '': retweeted_status['user']['id']
-    status_created_at = Date.parse(retweeted_status['created_at']).to_s
+    weibo_created_at = Date.parse(retweeted_status['created_at']).to_s
 
     WeiboStatus.create(
       :weibo_status_id => retweeted_status['idstr'],
@@ -110,7 +110,7 @@ class WeiboStatus < ActiveRecord::Base
       :bmiddle_pic => retweeted_status['bmiddle_pic'],
       :original_pic => retweeted_status['original_pic'],
       :thumbnail_pic => retweeted_status['thumbnail_pic'],
-      :status_created_at => status_created_at,
+      :weibo_created_at => weibo_created_at,
       :json => retweeted_status.to_json
     )
 
