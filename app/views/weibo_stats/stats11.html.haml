@@ -1,14 +1,10 @@
 - hbreadcrumb '首页', '/'
-- hbreadcrumb "统计分析: 评论转发趋势", '#'
-
-.page-weibo-retweeted
-  - unless @retweeted_statuses.nil?
-    = "转发微博条数为 #{@retweeted_statuses.length}"
+- hbreadcrumb "统计分析: 被评论趋势", '#'
 
 
 .page-weibo-interactive-users
   :ruby
-    weibo_users = users_by_my_comments_and_retweeted(@group_comments, @group_retweeted)
+    weibo_users = users_by_received_comments(@group_comments)
   
   %ul
   - if weibo_users.blank?

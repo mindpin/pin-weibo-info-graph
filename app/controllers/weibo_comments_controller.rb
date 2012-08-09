@@ -60,9 +60,6 @@ class WeiboCommentsController < ApplicationController
       # 根据 api 从微博采集我发出的评论
       comments = current_user.weibo_auth.get_received_comments_by_count(params[:count].to_i)
 
-      p comments
-      p 777777777777777777777777777777777777
-
       # 评论保存到数据库
       WeiboComment.save_comments(comments)
     rescue Exception=> ex

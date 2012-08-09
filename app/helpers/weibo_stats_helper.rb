@@ -7,8 +7,36 @@ module WeiboStatsHelper
   "%m/%d/%y" )
   end
 
+  def users_by_received_comments(received_comments)
+    years = {}
+    begin
+      received_comments.each do |year, week_data|
+        next if week_data.nil?
 
-  def users_by_comments_and_retweeted(year_comments, year_retweeted_statuses)
+        weeks = Hash.new(0)
+        week_data.each do |week|
+          weibo_users = Hash.new(0)
+
+          week_index = Date.parse(week[0].weibo_created_at.to_s).cweek
+
+          week.each do |row|
+            next if row.weibo_user_id.nil?
+            weibo_users[row.weibo_user_id] += 1
+          end
+
+          weeks[week_index] = weibo_users
+        end
+
+        years[year] = weeks.to_hash
+      end
+    rescue
+    end
+
+    years
+  end
+
+
+  def users_by_my_comments_and_retweeted(year_comments, year_retweeted_statuses)
     comment_users = WeiboStatistics.users_by_year_data(year_comments, 'comment')
     retweeted_users = WeiboStatistics.users_by_year_data(year_retweeted_statuses, 'retweeted')
 

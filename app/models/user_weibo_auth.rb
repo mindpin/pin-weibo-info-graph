@@ -75,8 +75,12 @@ class UserWeiboAuth < ActiveRecord::Base
   end
 
 
-  def group_comments
-    WeiboStatistics.group_data(self.weibo_comments)
+  def group_my_comments
+    WeiboStatistics.group_data(self.my_comments)
+  end
+
+  def group_received_comments
+    WeiboStatistics.group_data(self.received_comments)
   end
 
 
