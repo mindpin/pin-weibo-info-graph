@@ -39,7 +39,8 @@ class WeiboComment < ActiveRecord::Base
           :weibo_user_id => comment['user']['idstr'],
           :weibo_status_id => comment['status']['idstr'],
           :weibo_created_at => weibo_created_at,
-          :json => comment.to_json
+          :json => comment.to_json,
+          :to_weibo_user_id => comment['status']['user']['id']
         )
 
         WeiboStatus.save_new(comment['status'])

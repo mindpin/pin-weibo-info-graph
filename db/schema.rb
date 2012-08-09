@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120806070152) do
+ActiveRecord::Schema.define(:version => 20120809023621) do
 
   create_table "online_records", :force => true do |t|
     t.integer  "user_id"
@@ -64,6 +64,7 @@ ActiveRecord::Schema.define(:version => 20120806070152) do
     t.datetime "updated_at"
     t.date     "weibo_created_at"
     t.text     "json"
+    t.integer  "to_weibo_user_id", :limit => 8
   end
 
   create_table "weibo_statuses", :force => true do |t|

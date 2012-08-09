@@ -32,13 +32,12 @@ class WeiboCommentsController < ApplicationController
   # 当前登录用户发出的评论列表
   def by_me
     # 把我所有发出的评论从数据表拿出来显示在view上
-    @my_comments = current_user.weibo_auth.weibo_comments
+    @my_comments = current_user.weibo_auth.my_comments
   end
 
-  def by_me_submit
-    # 先根据 api 把最新评论存到数据库
-    # 根据 api 从微博采集我的评论
+  def by_me_submit    
     begin
+      # 根据 api 从微博采集我发出的评论
       comments = current_user.weibo_auth.get_my_comments_by_count(params[:count].to_i)
 
       # 评论保存到数据库
@@ -49,6 +48,29 @@ class WeiboCommentsController < ApplicationController
       p 'weibo error'
     end
     redirect_to "/weibo_comments/by_me"
+  end
+
+  # 我收到的评论
+  def to_me
+    @received_comments = current_user.weibo_auth.received_comments
+  end
+
+  def to_me_submit
+    begin
+      # 根据 api 从微博采集我发出的评论
+      comments = current_user.weibo_auth.get_received_comments_by_count(params[:count].to_i)
+
+      p comments
+      p 777777777777777777777777777777777777
+
+      # 评论保存到数据库
+      WeiboComment.save_comments(comments)
+    rescue Exception=> ex
+      p ex.message
+      puts ex.backtrace*"\n"
+      p 'weibo error'
+    end
+    redirect_to "/weibo_comments/to_me"
   end
 
 

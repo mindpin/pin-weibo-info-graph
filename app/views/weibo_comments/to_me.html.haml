@@ -1,0 +1,20 @@
+- hbreadcrumb '首页', '/'
+- hbreadcrumb "我收到的评论", '#'
+
+.page-weibo-comments-query
+  = form_tag '/weibo_comments/to_me_submit', :method => 'post' do
+    .field
+      %label= "评论数量"
+      = text_field_tag 'count'
+
+    .field.submit
+      %a.form-submit-button{:href=>'javascript:;'} 采集
+
+.page-weibo-comments
+  - if !@received_comments.blank?
+    .comments
+      - @received_comments.each do |comment|
+        .comment
+          .text= comment.text
+  - else
+    本地没有我收到的评论数据

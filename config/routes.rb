@@ -28,8 +28,13 @@ PinWorkResultsShow::Application.routes.draw do
   # begin of weibo comments
   resources :weibo_comments do
     collection do
+      # 我发出的评论
       get :by_me
       post :by_me_submit
+
+      # 我收到的评论
+      get :to_me
+      post :to_me_submit
     end
   end
 
@@ -46,6 +51,9 @@ PinWorkResultsShow::Application.routes.draw do
 
       # 统计分析: 评论转发趋势
       get :stats3
+
+      # 统计分析：被评论趋势
+      get :stats11
     end
   end
   # end of stats
