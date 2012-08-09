@@ -12,7 +12,7 @@
   
   %ul
   - if weibo_users.blank?
-    %li= "您还不是微博用户"
+    %li= "数据库暂时还没有相关的评论记录，请先采集"
 
   - else
     - weibo_users.each do |year, week_users|
