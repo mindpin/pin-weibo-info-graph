@@ -44,6 +44,9 @@ class WeiboComment < ActiveRecord::Base
         )
 
         WeiboStatus.save_new(comment['status'])
+
+        # 创建微博用户
+        WeiboStatus.create_weibo_user(comment)
       end
     end
   end
