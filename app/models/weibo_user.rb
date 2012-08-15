@@ -201,7 +201,7 @@ class WeiboUser < ActiveRecord::Base
   end
 
 
-
+  # 用户 descriptions 分词，同时储存使用相应关键字对应的用户列表
   def combine_descriptions(users)
     data = Hash.new
     words = Hash.new(0)
