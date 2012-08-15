@@ -58,6 +58,10 @@ PinWorkResultsShow::Application.routes.draw do
       # 互相关注度
       get :stats12
       post :stats12_submit
+
+      # 粉丝 微博用户关注的用户
+      get :stats13
+      post :stats13_submit
     end
   end
   # end of stats

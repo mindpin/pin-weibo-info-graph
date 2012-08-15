@@ -1,0 +1,37 @@
+- hbreadcrumb '首页', '/'
+- hbreadcrumb "统计分析: 粉丝关键字", '#'
+
+
+.page-weibo
+  = form_tag '/weibo_stats/stats13_submit', :method => 'post' do
+    .field.need
+      %label= "用户"
+      = text_field_tag 'screen_name'
+
+    .field.submit
+      %a.form-submit-button{:href=>'javascript:;'} 粉丝关键字
+
+
+.page-friends-keywords
+  .title= "关注用户关键字"
+  - unless @friends_description_data.nil?
+    %ul
+    - @friends_description_data['words'].each do |word|
+      %li= word[0]
+      %ul
+        - @friends_description_data['people'][word[0]].each do |user|
+          %li= user
+
+
+
+.page-followers-keywords
+  .title= "粉丝关键字"
+  - unless @followers_description_data.nil?
+    %ul
+    - @followers_description_data['words'].each do |word|
+      %li= word[0]
+      %ul
+        - @followers_description_data['people'][word[0]].each do |user|
+          %li= user
+
+

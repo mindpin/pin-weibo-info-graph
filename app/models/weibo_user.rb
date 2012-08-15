@@ -12,6 +12,17 @@ class WeiboUser < ActiveRecord::Base
 
   validates_uniqueness_of :weibo_user_id
 
+  def create_new_user(user)
+    WeiboUser.create(
+      :weibo_user_id => user['id'],
+      :screen_name => user['screen_name'],
+      :profile_image_url => user['profile_image_url'],
+      :gender  => user['gender'],
+      :description => user['description'],
+      :json => user.to_json
+    )
+  end
+
   STOP_WORDS = begin
     file = File.new File.expand_path(Rails.root.to_s + '/lib/stopwords.txt')
     file.read.split("\r\n") - ['']
@@ -175,10 +186,10 @@ class WeiboUser < ActiveRecord::Base
     end
 
     client = user.weibo_auth.weibo_client
+    user = client.users.show(:screen_name => screen_name).parsed
 
     friendships = []
-
-    friends = client.friendships.friends(:screen_name => screen_name).parsed
+    friends = client.friendships.friends_bilateral(user['id']).parsed
     if !friends['users'].nil? && friends['users'].any?
       friends['users'].each do |friend|
         friendships << friend['screen_name']
@@ -187,6 +198,41 @@ class WeiboUser < ActiveRecord::Base
 
     friendships
 
+  end
+
+
+
+  def combine_descriptions(users)
+    data = Hash.new
+    words = Hash.new(0)
+    people = Hash.new
+
+    users.each do |user|
+
+      algor = RMMSeg::Algorithm.new(_prepate_text(user['description']))
+    
+      loop do
+        tok = algor.next_token
+        break if tok.nil?
+
+        word = tok.text
+        if !STOP_WORDS.include?(word) && word.split(//u).length > 1
+          words[word] = words[word] + 1
+          (people[word] ||= []) << user['screen_name']
+          people[word] = people[word].uniq
+
+          # 储存用户
+          create_new_user(user)
+        end
+
+
+      end
+    end
+
+    data['words'] = words.sort {|a1, a2| a2[1].to_i <=> a1[1].to_i }
+    data['people'] = people
+
+    data
   end
 
  

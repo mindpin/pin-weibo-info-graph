@@ -4,11 +4,11 @@
 
 .page-weibo
   = form_tag '/weibo_stats/stats12_submit', :method => 'post' do
-    .field
+    .field.need
       %label= "用户A"
       = text_field_tag 'weibo_user_a'
 
-    .field
+    .field.need
       %label= "用户B"
       = text_field_tag 'weibo_user_b'
 

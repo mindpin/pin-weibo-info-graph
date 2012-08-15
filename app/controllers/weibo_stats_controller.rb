@@ -56,5 +56,23 @@ class WeiboStatsController < ApplicationController
     render :action => 'stats12'
   end
 
+  # 粉丝  关注用户列表
+  def stats13
+  end
+
+  def stats13_submit
+    client = current_user.weibo_auth.weibo_client
+
+    # 关注用户
+    friends = client.friendships.friends(:screen_name => params[:screen_name]).parsed
+    @friends_description_data = WeiboUser.new.combine_descriptions(friends['users'])
+
+    # 粉丝
+    followers = client.friendships.followers(:screen_name => params[:screen_name]).parsed
+    @followers_description_data = WeiboUser.new.combine_descriptions(followers['users'])
+
+    render :action => 'stats13'
+  end
+
 
 end
