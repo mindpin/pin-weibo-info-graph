@@ -40,4 +40,21 @@ class WeiboStatsController < ApplicationController
     end
   end
 
+
+  # 互相关注度
+  def stats12
+  end
+
+  def stats12_submit
+    @weibo_user_a = params[:weibo_user_a]
+    @weibo_user_b = params[:weibo_user_b]
+
+    if !@weibo_user_a.blank? && !@weibo_user_b.blank?
+      @connection_friends = WeiboUser.get_connections(current_user, @weibo_user_a, @weibo_user_b)
+    end
+
+    render :action => 'stats12'
+  end
+
+
 end

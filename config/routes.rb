@@ -54,6 +54,10 @@ PinWorkResultsShow::Application.routes.draw do
 
       # 统计分析：被评论趋势
       get :stats11
+
+      # 互相关注度
+      get :stats12
+      post :stats12_submit
     end
   end
   # end of stats
