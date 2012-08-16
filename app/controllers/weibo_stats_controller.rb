@@ -70,7 +70,7 @@ class WeiboStatsController < ApplicationController
       friends = client.friendships.friends(:screen_name => screen_name).parsed
       friends_data += friends['users']
       if friends['next_cursor'] >=0
-        friends = client.friendships.friends(:screen_name => screen_name).parsed
+        friends = client.friendships.friends(:screen_name => screen_name, :count => friends['next_cursor']).parsed
         friends_data += friends['users']
       else
         break
@@ -85,7 +85,7 @@ class WeiboStatsController < ApplicationController
       followers = client.friendships.followers(:screen_name => screen_name).parsed
       followers_data += followers['users']
       if followers['next_cursor'] >=0
-        followers = client.friendships.followers(:screen_name => screen_name).parsed
+        followers = client.friendships.followers(:screen_name => screen_name, :count => friends['next_cursor']).parsed
         followers_data += followers['users']
       else
         break
