@@ -18,7 +18,7 @@ class WeiboStatus < ActiveRecord::Base
   default_scope order('weibo_status_id DESC')
 
   
-  # 刷新微博对应的评论列表
+  # 刷新微博对应的评论
   def refresh_comments(user)
     client = user.get_weibo_client
     response = client.comments.show(self.weibo_status_id).parsed

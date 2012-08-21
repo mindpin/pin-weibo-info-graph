@@ -24,7 +24,6 @@ class WeiboCommentsController < ApplicationController
 
   # 重新更新某条微博对应的所有评论
   def refresh
-
     weibo_status = WeiboStatus.find_by_weibo_status_id(params[:weibo_status_id])
     weibo_status.refresh_comments(current_user) unless weibo_status.nil?
 

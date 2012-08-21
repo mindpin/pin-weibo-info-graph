@@ -65,21 +65,6 @@ class WeiboUser < ActiveRecord::Base
 
   # -----------
   
-  def get_all_comments(client_user)
-    client = client_user.get_weibo_client
-
-    statuses = self.weibo_statuses
-    if !statuses.nil? && statuses.any?
-      comments = []
-      statuses.each do |status|
-        response = client.comments.show(status.weibo_status_id).parsed
-        comments = comments + response['comments']
-      end
-    end
-
-    comments
-  end
-  # end of get_all_comments
 
   
   def group_retweeted_statuses
@@ -234,6 +219,10 @@ class WeiboUser < ActiveRecord::Base
 
     data
   end
+
+
+
+  include WeiboComment::WeiboUserMethods
 
  
 end
