@@ -17,6 +17,19 @@ class WeiboStatus < ActiveRecord::Base
   # scope
   default_scope order('weibo_status_id DESC')
 
+  
+  # 刷新微博对应的评论列表
+  def refresh_comments(user)
+    client = user.get_weibo_client
+    response = client.comments.show(self.weibo_status_id).parsed
+    comments = response['comments']
+
+    unless comments.nil?
+      WeiboComment.destroy_all(:weibo_status_id => self.weibo_status_id)
+      WeiboComment.save_comments(comments)
+    end
+  end
+
 
   # 先根据 api 获取微博列表
   def self.get_weibo_statuses(user, screen_name, count)
