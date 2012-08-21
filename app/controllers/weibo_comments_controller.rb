@@ -8,7 +8,7 @@ class WeiboCommentsController < ApplicationController
 
         WeiboComment.save_comments(comments)
 
-        @comments = WeiboComment.all
+        @comments = WeiboComment.find_all_by_weibo_user_id(weibo_user.weibo_user_id)
       rescue
         p 'user not in database'
       end
