@@ -12,18 +12,23 @@ class WeiboUsersController < ApplicationController
 
   def show
     @weibo_user = WeiboUser.find_by_weibo_user_id(params[:id])
-    @weibo_statuses = @weibo_user.weibo_statuses.paginate(:page => params[:page], :per_page => 20).order('id DESC')
+    # @weibo_statuses = @weibo_user.weibo_statuses.paginate(:page => params[:page], :per_page => 20).order('id DESC')
+    @weibo_statuses = @weibo_user.weibo_statuses.order('id DESC').all(:limit => 200)
   end
 
   
 
   # 刷新微博用户最新微博
   def refresh
-    uid = params[:id]
-    since_id = WeiboStatus.find_all_by_weibo_user_id(uid).first.weibo_status_id
-
     client = current_user.get_weibo_client
-    user_weibo = client.statuses.user_timeline(:uid => uid, :since_id => since_id).parsed
+    uid = params[:id]
+
+    if WeiboStatus.find_all_by_weibo_user_id(uid).first.nil?
+      user_weibo = client.statuses.user_timeline(:uid => uid).parsed
+    else
+      since_id = WeiboStatus.find_all_by_weibo_user_id(uid).first.weibo_status_id
+      user_weibo = client.statuses.user_timeline(:uid => uid, :since_id => since_id).parsed
+    end
 
     WeiboStatus.store_weibo_statuses(user_weibo['statuses'])
 
@@ -32,11 +37,11 @@ class WeiboUsersController < ApplicationController
       user_weibo = client.statuses.user_timeline(:uid => uid, :since_id => since_id).parsed
 
       if user_weibo['statuses'].nil? || user_weibo['statuses'].count < 20
-        return
+        break
       end
     end
 
-    redirect_to "/weibo_users"
+    redirect_to "/weibo_users/#{uid}"
 
   end
 end

@@ -2,12 +2,10 @@
 - hbreadcrumb "微博用户：#{@weibo_user.screen_name}", '#'
 
 #left-weibo-box
-  .head
-    =render 'weibo/parts/current_user_weibo_profile'
+  =render 'weibo/parts/current_user_weibo_profile'
 
 #right-weibo-box
-  .navigation
-    =render 'weibo/parts/navigation', :weibo_user_id => @weibo_user.weibo_user_id
+  =render 'weibo/parts/navigation', :weibo_user_id => @weibo_user.weibo_user_id
   
   .field.submit
     %a.form-submit-button{:href=>"/weibo_users/#{@weibo_user.weibo_user_id}/refresh"} 刷新
@@ -22,7 +20,7 @@
             .text= weibo.text
             .see-comment= link_to '查看评论', "/weibo_comments/#{weibo.weibo_status_id}"
 
-  .page-paginate= will_paginate @weibo_statuses
+  .page-paginate= # will_paginate @weibo_statuses
 
 
 
