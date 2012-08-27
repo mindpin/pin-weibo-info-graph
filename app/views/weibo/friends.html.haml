@@ -1,0 +1,16 @@
+- hbreadcrumb '首页', '#'
+
+
+#left-weibo-box
+  =render 'weibo/parts/current_user_weibo_profile'
+
+#right-weibo-box
+  =render 'weibo/parts/navigation'
+  
+  .friends
+    - if @friends.any?
+      %ul
+      - @friends.each do |friend|
+        %li
+          .avatar= link_to(image_tag(friend['avatar_large']), "/weibo_users/#{friend['idstr']}")
+          .name= link_to friend['screen_name'], "/weibo_users/#{friend['idstr']}"

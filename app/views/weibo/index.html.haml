@@ -1,17 +1,18 @@
 - hbreadcrumb '首页', '#'
 
-- if current_user.weibo_auth.nil? || @weibo_user.nil? ||  !@client.is_authorized?
+
+- if current_user.weibo_auth.nil? || @weibo_user.nil?
   .page-weibo-register    
     = link_to "使用微博登录", @new_client.auth_code.authorize_url(:response_type => "code")
 - else
-  .page-weibo-notice
-    .desc 已经连接到微博
-    .to-stat= link_to '统计微博信息', "/weibo/stats"
+  #left-weibo-box
+    =render 'weibo/parts/current_user_weibo_profile'
 
-  .page-weibo-account
-    .head
-      .avatar= image_tag(@weibo_user['avatar_large'])
-      .name= @weibo_user['screen_name']
+  #right-weibo-box
+    =render 'weibo/parts/navigation'
+
+  .page-weibo-notice
+    .to-stat= link_to '统计微博信息', "/weibo/stats"
 
     = form_tag '/weibo', :method => 'create' do
       .field

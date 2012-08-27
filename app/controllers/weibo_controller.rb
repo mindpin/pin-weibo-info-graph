@@ -3,16 +3,19 @@ class WeiboController < ApplicationController
 
   def index
     @new_client = Weibo2::Client.new
+    @client = current_user.get_weibo_client
 
-    unless current_user.weibo_auth.nil?
-      @client = current_user.get_weibo_client
-      if @client.is_authorized?
-        begin
-          response = @client.account.get_uid
-          @weibo_user = @client.users.show(response.parsed).parsed
-        rescue  
-          puts 'I am rescued.'  
-        end
+    if current_user.weibo_auth.nil?
+      begin
+        response = @client.account.get_uid
+        @weibo_user = @client.users.show(response.parsed).parsed
+      rescue  
+      end
+    else
+      begin
+        uid = current_user.weibo_auth.weibo_user.weibo_user_id
+        @weibo_user = @client.users.show(:uid => uid).parsed
+      rescue
       end
     end
 
@@ -57,5 +60,18 @@ class WeiboController < ApplicationController
     end
   end
   # end of stats
+
+
+  # 双向关注我的朋友
+  def friends
+    client = current_user.get_weibo_client
+    response = client.friendships.friends_bilateral_ids(current_user.weibo_auth.weibo_user_id).parsed
+    friend_uid_list = response['ids']
+
+    @friends = []
+    friend_uid_list.each do |uid|
+      @friends << client.users.show(:uid => uid).parsed
+    end
+  end
 
 end

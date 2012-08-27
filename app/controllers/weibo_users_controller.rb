@@ -15,6 +15,8 @@ class WeiboUsersController < ApplicationController
     @weibo_statuses = @weibo_user.weibo_statuses.paginate(:page => params[:page], :per_page => 20).order('id DESC')
   end
 
+  
+
   # 刷新微博用户最新微博
   def refresh
     uid = params[:id]

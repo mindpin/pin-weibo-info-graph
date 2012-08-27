@@ -1,20 +1,30 @@
 - hbreadcrumb '首页', '/'
 - hbreadcrumb "我发出的评论", '#'
 
-.page-weibo-comments-query
-  = form_tag '/weibo_comments/by_me_submit', :method => 'post' do
-    .field
-      %label= "评论数量"
-      = text_field_tag 'count'
 
-    .field.submit
-      %a.form-submit-button{:href=>'javascript:;'} 采集
 
-.page-weibo-comments
-  - if !@my_comments.blank?
-    .comments
-      - @my_comments.each do |comment|
-        .comment
-          .text= comment.text
-  - else
-    本地没有我的评论数据
+#left-weibo-box
+  =render 'weibo/parts/current_user_weibo_profile'
+
+#right-weibo-box
+  =render 'weibo/parts/navigation'
+
+  =render 'weibo/parts/comments_menu'
+
+  .page-weibo-comments-query
+    = form_tag '/weibo_comments/by_me_submit', :method => 'post' do
+      .field
+        %label= "评论数量"
+        = text_field_tag 'count'
+
+      .field.submit
+        %a.form-submit-button{:href=>'javascript:;'} 采集
+
+  .page-weibo-comments
+    - if !@my_comments.blank?
+      .comments
+        - @my_comments.each do |comment|
+          .comment
+            .text= comment.text
+    - else
+      本地没有我的评论数据

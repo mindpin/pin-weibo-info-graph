@@ -13,6 +13,7 @@ PinWorkResultsShow::Application.routes.draw do
     collection do
       get :callback
       get :stats
+      get :friends
     end
   end
 
