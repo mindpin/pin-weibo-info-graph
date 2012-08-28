@@ -2,21 +2,8 @@ class WeiboController < ApplicationController
   before_filter :login_required
 
   def index
-    @new_client = Weibo2::Client.new
-    @client = current_user.get_weibo_client
-
-    if current_user.weibo_auth.nil?
-      begin
-        response = @client.account.get_uid
-        @weibo_user = @client.users.show(response.parsed).parsed
-      rescue  
-      end
-    else
-      begin
-        uid = current_user.weibo_auth.weibo_user.weibo_user_id
-        @weibo_user = @client.users.show(:uid => uid).parsed
-      rescue
-      end
+    if !current_user.has_weibo_auth?
+      return render :template => 'weibo/no_weibo_auth'
     end
 
   end
@@ -26,7 +13,6 @@ class WeiboController < ApplicationController
     client = Weibo2::Client.from_code(code)
 
     if client.is_authorized?
-      # current_user.set_new_weibo_auth(code, client.token.token, client.token.expires_in)
       current_user.set_new_weibo_auth(code, client)
     end
 

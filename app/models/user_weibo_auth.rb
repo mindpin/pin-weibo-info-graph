@@ -15,7 +15,6 @@ class UserWeiboAuth < ActiveRecord::Base
   def weibo_client
     Weibo2::Client.from_hash(:access_token => self.token, :expires_in => self.expires_in)
   end
-
   
   # 采集我发出的评论
   def get_my_comments_by_count(count)
@@ -95,13 +94,17 @@ class UserWeiboAuth < ActiveRecord::Base
     
     module InstanceMethods
       def has_weibo_auth?
-        !self.weibo_auth.blank?
+        (!self.weibo_auth.blank?) && (
+          client = self.get_weibo_client
+          uid = self.weibo_auth.weibo_user_id
+          !client.users.show(:uid => uid).parsed.blank?
+        )
       end
 
       # begin set_new_weibo_auth
       def set_new_weibo_auth(auth_code, client)
         # 如果过期重新设置的话，先删除，后面再创建新的
-        if has_weibo_auth?
+        if !self.weibo_auth.blank?
           self.weibo_auth.destroy
         end
 
@@ -117,6 +120,7 @@ class UserWeiboAuth < ActiveRecord::Base
           :screen_name => user['screen_name'],
           :avatar => user['avatar_large']
         )
+        WeiboUser.create_by_api_hash(user)
       end
       # end set_new_weibo_auth
 

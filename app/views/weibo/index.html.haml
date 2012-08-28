@@ -1,22 +1,18 @@
 - hbreadcrumb '首页', '#'
 
 
-- if current_user.weibo_auth.nil? || @weibo_user.nil?
-  .page-weibo-register    
-    = link_to "使用微博登录", @new_client.auth_code.authorize_url(:response_type => "code")
-- else
-  #left-weibo-box
-    =render 'weibo/parts/current_user_weibo_profile'
+#left-weibo-box
+  =render 'weibo/parts/current_user_weibo_profile'
 
-  #right-weibo-box
-    =render 'weibo/parts/navigation'
+#right-weibo-box
+  =render 'weibo/parts/navigation'
 
-  .page-weibo-notice
-    .to-stat= link_to '统计微博信息', "/weibo/stats"
+.page-weibo-notice
+  .to-stat= link_to '统计微博信息', "/weibo/stats"
 
-    = form_tag '/weibo', :method => 'create' do
-      .field
-        %label 微博正文
-        = text_area_tag 'content', nil, :rows => 6, :cols => 45
-      .field.submit
-        %a.form-submit-button{:href=>'javascript:;'} 提交
+  = form_tag '/weibo', :method => 'create' do
+    .field
+      %label 微博正文
+      = text_area_tag 'content', nil, :rows => 6, :cols => 45
+    .field.submit
+      %a.form-submit-button{:href=>'javascript:;'} 提交

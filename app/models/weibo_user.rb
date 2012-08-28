@@ -12,7 +12,7 @@ class WeiboUser < ActiveRecord::Base
 
   validates_uniqueness_of :weibo_user_id
 
-  def create_new_user(user)
+  def self.create_by_api_hash(user)
     WeiboUser.create(
       :weibo_user_id => user['id'],
       :screen_name => user['screen_name'],
@@ -207,7 +207,7 @@ class WeiboUser < ActiveRecord::Base
           people[word] = people[word].uniq
 
           # 储存用户
-          create_new_user(user)
+          self.class.create_by_api_hash(user)
         end
 
 
