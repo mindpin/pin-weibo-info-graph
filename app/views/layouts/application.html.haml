@@ -20,17 +20,18 @@
         .title
           %a{:href=>'/'} 新浪微博采集分析器
           .version dev.0731
-      .nav
-        %a.item{:href=>'/'} 首页
-        %a.item{:href=>'/weibo_users'} 本地微博用户
-        %a.item{:href=>'/weibo_comments'} 获取评论数据
-        %a.item{:href=>'/weibo_comments/by_me'} 我发出的评论
-        %a.item{:href=>'/weibo_comments/to_me'} 我收到的评论
-        %a.item{:href=>'/weibo_stats/stats1'} 统计分析: 词汇使用趋势
-        %a.item{:href=>'/weibo_stats/stats3'} 统计分析: 评论转发趋势
-        %a.item{:href=>'/weibo_stats/stats11'} 统计分析：被评论趋势
-        %a.item{:href=>'/weibo_stats/stats12'} 统计分析：关注度
-        %a.item{:href=>'/weibo_stats/stats13'} 统计分析：粉丝
+      - if logged_in?
+        .nav
+          %a.item{:href=>'/'} 首页
+          %a.item{:href=>'/weibo_users'} 本地微博用户
+          %a.item{:href=>'/weibo_comments'} 获取评论数据
+          %a.item{:href=>'/weibo_comments/by_me'} 我发出的评论
+          %a.item{:href=>'/weibo_comments/to_me'} 我收到的评论
+          %a.item{:href=>'/weibo_stats/stats1'} 统计分析: 词汇使用趋势
+          %a.item{:href=>'/weibo_stats/stats3'} 统计分析: 评论转发趋势
+          %a.item{:href=>'/weibo_stats/stats11'} 统计分析：被评论趋势
+          %a.item{:href=>'/weibo_stats/stats12'} 统计分析：关注度
+          %a.item{:href=>'/weibo_stats/stats13'} 统计分析：粉丝
 
     .page-topbar
       .page-breadcrumb
