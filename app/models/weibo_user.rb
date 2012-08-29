@@ -23,7 +23,7 @@ class WeiboUser < ActiveRecord::Base
     )
   end
 
-  def friends(weibo_client)
+  def friends_bilateral(weibo_client)
     response = weibo_client.friendships.friends_bilateral(self.weibo_user_id).parsed
     users = response['users']
 

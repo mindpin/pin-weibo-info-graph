@@ -51,7 +51,7 @@ class WeiboController < ApplicationController
   # 双向关注我的朋友
   def friends
     client = current_user.get_weibo_client
-    @friends = current_user.weibo_auth.weibo_user.friends(client)
+    @friends = current_user.weibo_auth.weibo_user.friends_bilateral(client)
   end
 
 end
