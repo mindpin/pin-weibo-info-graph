@@ -7,7 +7,8 @@ class WeiboStatus < ActiveRecord::Base
              :class_name => 'WeiboUser', 
              :foreign_key => :weibo_user_id, :primary_key => :weibo_user_id
 
-  has_many :weibo_comments, :class_name => 'WeiboComment', :foreign_key => :weibo_status_id
+  has_many :weibo_comments, :class_name => 'WeiboComment', :foreign_key => :weibo_status_id,
+    :primary_key => :weibo_status_id
 
 
   # 验证
@@ -42,8 +43,6 @@ class WeiboStatus < ActiveRecord::Base
       params[:since_id] = newest_status.weibo_status_id
     end
     weibo_statuses = self._get_weibo_statuses(user, 200, params)
-    p "~~~~~~~~~~~~~~~~"
-    p weibo_statuses
     WeiboStatus.store_weibo_statuses(weibo_statuses)
   end
 
