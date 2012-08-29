@@ -60,7 +60,7 @@ class WeiboStatus < ActiveRecord::Base
     while true do
       user_weibo = client.statuses.user_timeline(options.merge(:page => current_page, :count => 20)).parsed
       single_weibo_statuses = user_weibo['statuses']
-      break if single_weibo_statuses.nil?
+      break if single_weibo_statuses.blank?
 
       if weibo_statuses.count + single_weibo_statuses.count < count
         weibo_statuses += single_weibo_statuses

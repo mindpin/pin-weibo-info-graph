@@ -11,14 +11,7 @@
 
   =render 'weibo/parts/comments_menu'
 
-  .page-weibo-comments-query
-    = form_tag '/weibo_comments/by_me_submit', :method => 'post' do
-      .field
-        %label= "评论数量"
-        = text_field_tag 'count'
-
-      .field.submit
-        %a.form-submit-button{:href=>'javascript:;'} 采集
+  = link_to '刷新','/weibo_comments/refresh_by_me',:method => 'post'
 
   .page-weibo-comments
     - if !@my_comments.blank?

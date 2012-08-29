@@ -4,8 +4,13 @@ class UserWeiboAuth < ActiveRecord::Base
   has_many :my_comments, 
            :class_name => 'WeiboComment',
            :conditions => lambda { "to_weibo_user_id != #{self.weibo_user_id}" },
+           :order => 'weibo_comment_id desc',
            :foreign_key => :weibo_user_id, :primary_key => :weibo_user_id
 
+  has_many :received_comments,
+           :class_name => 'WeiboComment',
+           :order => 'weibo_comment_id desc',
+           :foreign_key => :to_weibo_user_id, :primary_key => :weibo_user_id
 
   has_one :weibo_user, :class_name => 'WeiboUser', 
           :foreign_key => :weibo_user_id, :primary_key => :weibo_user_id
@@ -15,19 +20,41 @@ class UserWeiboAuth < ActiveRecord::Base
   def weibo_client
     Weibo2::Client.from_hash(:access_token => self.token, :expires_in => self.expires_in)
   end
+
+  def refresh_my_comments
+    options = {}
+    comment = self.my_comments.first
+    if !comment.blank?
+      options[:since_id] = comment.weibo_comment_id
+    end
+    comments = get_my_comments_by_count(200,options)
+    WeiboComment.save_comments(comments)
+  end
+
+  def refresh_received_comments
+    options = {}
+    comment = self.received_comments.first
+    if !comment.blank?
+      options[:since_id] = comment.weibo_comment_id
+    end
+    comments = get_received_comments_by_count(200,options)
+    WeiboComment.save_comments(comments)
+  end
   
   # 采集我发出的评论
-  def get_my_comments_by_count(count)
+  def get_my_comments_by_count(count,options)
     client = self.weibo_client
 
     current_page = 1
     if count <= 20
-      response = client.comments.by_me(:page => current_page, :count => 20).parsed
+      response = client.comments.by_me(options.merge(:page => current_page, :count => 20)).parsed
       comments = response['comments']
     else
       comments = []
       while true do
-        response = client.comments.by_me(:page => current_page, :count => 20).parsed
+        response = client.comments.by_me(options.merge(:page => current_page, :count => 20)).parsed
+        break if response['comments'].blank?
+
         if comments.count + response['comments'].count < count
           comments = comments + response['comments']
           current_page += 1
@@ -43,17 +70,19 @@ class UserWeiboAuth < ActiveRecord::Base
   end
 
   # 采集我收到的评论
-  def get_received_comments_by_count(count)
+  def get_received_comments_by_count(count,options)
     client = self.weibo_client
 
     current_page = 1
     if count <= 20
-      response = client.comments.to_me(:page => current_page, :count => 20).parsed
+      response = client.comments.to_me(options.merge(:page => current_page, :count => 20)).parsed
       comments = response['comments']
     else
       comments = []
       while true do
-        response = client.comments.to_me(:page => current_page, :count => 20).parsed
+        response = client.comments.to_me(options.merge(:page => current_page, :count => 20)).parsed
+        break if response['comments'].blank?
+
         if comments.count + response['comments'].count < count
           comments = comments + response['comments']
           current_page += 1
@@ -67,12 +96,6 @@ class UserWeiboAuth < ActiveRecord::Base
 
     comments
   end
-
-
-  def received_comments
-    WeiboComment.where(:to_weibo_user_id => self.weibo_user_id)
-  end
-
 
   def group_my_comments
     WeiboStatistics.group_data(self.my_comments)
@@ -99,6 +122,8 @@ class UserWeiboAuth < ActiveRecord::Base
           uid = self.weibo_auth.weibo_user_id
           !client.users.show(:uid => uid).parsed.blank?
         )
+      rescue
+        false
       end
 
       # begin set_new_weibo_auth
