@@ -33,23 +33,22 @@ class WeiboStatus < ActiveRecord::Base
   end
 
   def self.get_weibo_statuses(user, screen_name, count)
-    self._get_weibo_statuses(user, count, :screen_name => screen_name)
+    client = user.get_weibo_client
+    self._get_weibo_statuses(client, count, :screen_name => screen_name)
   end
 
-  def self.refresh(user,uid)
+  def self.refresh(client,uid)
     params = {:uid => uid}
     newest_status = WeiboStatus.of_weibo_user_id(uid).first
     if !newest_status.blank?
       params[:since_id] = newest_status.weibo_status_id
     end
-    weibo_statuses = self._get_weibo_statuses(user, 200, params)
+    weibo_statuses = self._get_weibo_statuses(client, 200, params)
     WeiboStatus.store_weibo_statuses(weibo_statuses)
   end
 
   # 先根据 api 获取微博列表
-  def self._get_weibo_statuses(user, count, options = {})
-    client = user.get_weibo_client
-
+  def self._get_weibo_statuses(client, count, options = {})
     if count <= 20
       user_weibo = client.statuses.user_timeline(options.merge(:page => 1, :count => 20)).parsed
       return user_weibo['statuses']

@@ -20,8 +20,7 @@ class WeiboUsersController < ApplicationController
   def refresh
     client = current_user.get_weibo_client
     uid = params[:id]
-
-    WeiboStatus.refresh(current_user,uid)
+    WeiboStatus.refresh(client,uid)
 
     redirect_to "/weibo_users/#{uid}"
   end
