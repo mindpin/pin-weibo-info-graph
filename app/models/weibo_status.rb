@@ -16,6 +16,7 @@ class WeiboStatus < ActiveRecord::Base
 
   # scope
   default_scope order('weibo_status_id DESC')
+  scope :of_weibo_user_id, lambda{|weibo_user_id|where(:weibo_user_id => weibo_user_id)}
 
   
   # 刷新微博对应的评论
@@ -30,20 +31,35 @@ class WeiboStatus < ActiveRecord::Base
     end
   end
 
+  def self.get_weibo_statuses(user, screen_name, count)
+    self._get_weibo_statuses(user, count, :screen_name => screen_name)
+  end
+
+  def self.refresh(user,uid)
+    params = {}
+    newest_status = WeiboStatus.of_weibo_user_id(uid).first
+    if !newest_status.blank?
+      params[:since_id] = newest_status.weibo_status_id
+    end
+    weibo_statuses = self._get_weibo_statuses(user, 200, params)
+    p "~~~~~~~~~~~~~~~~"
+    p weibo_statuses
+    WeiboStatus.store_weibo_statuses(weibo_statuses)
+  end
 
   # 先根据 api 获取微博列表
-  def self.get_weibo_statuses(user, screen_name, count)
+  def self._get_weibo_statuses(user, count, options = {})
     client = user.get_weibo_client
 
     if count <= 20
-      user_weibo = client.statuses.user_timeline(:screen_name => screen_name, :page => 1, :count => 20).parsed
+      user_weibo = client.statuses.user_timeline(options.merge(:page => 1, :count => 20)).parsed
       return user_weibo['statuses']
     end
 
     weibo_statuses = []
     current_page = 1
     while true do
-      user_weibo = client.statuses.user_timeline(:screen_name => screen_name, :page => current_page, :count => 20).parsed
+      user_weibo = client.statuses.user_timeline(options.merge(:page => current_page, :count => 20)).parsed
       single_weibo_statuses = user_weibo['statuses']
       break if single_weibo_statuses.nil?
 
