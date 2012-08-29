@@ -1,0 +1,22 @@
+- hbreadcrumb '首页', '/'
+- hbreadcrumb "获取评论数据", '#'
+
+.page-weibo-comments-query
+  = form_tag '/weibo_comments_by_screen_name', :method => 'get' do
+    .field
+      %label= "用户名"
+      = text_field_tag 'screen_name', @screen_name
+
+    .field.submit
+      %a.form-submit-button{:href=>'javascript:;'} 同步
+
+.page-weibo-comments
+  %ul
+    - unless @comments.nil?
+      - @comments.each do |comment|
+        %li
+          .field= comment.text
+          .field= comment.weibo_status.text
+
+
+

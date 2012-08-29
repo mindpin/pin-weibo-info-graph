@@ -18,7 +18,7 @@
         - @weibo_statuses.each do |weibo|
           .weibo-status
             .text= weibo.text
-            .see-comment= link_to '查看评论', "/weibo_comments/#{weibo.weibo_status_id}"
+            .see-comment= link_to '查看评论', "/weibo_statuses/#{weibo.weibo_status_id}/weibo_comments"
 
   .page-paginate= # will_paginate @weibo_statuses
 

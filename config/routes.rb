@@ -25,21 +25,27 @@ PinWorkResultsShow::Application.routes.draw do
   end
   # end of weibo users
 
-  
+  get '/weibo_comments_by_screen_name' => 'weibo_comments#list_by_screen_name'
   # begin of weibo comments
-  resources :weibo_comments do
+  resources :weibo_comments,:except => [:index] do
     collection do
       # 我发出的评论
       get :by_me
-      post :by_me_submit
+      post :refresh_by_me
 
       # 我收到的评论
       get :to_me
-      post :to_me_submit
+      post :refresh_to_me
     end
   end
 
-  put  '/weibo_comments/:weibo_status_id/refresh'        => 'weibo_comments#refresh'
+  scope 'weibo_statuses/:weibo_status_id' do
+    resources :weibo_comments do
+      collection do
+        post :refresh
+      end
+    end
+  end
   # end of weibo comments
 
 

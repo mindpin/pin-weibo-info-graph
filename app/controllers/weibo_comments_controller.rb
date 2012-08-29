@@ -1,6 +1,6 @@
 class WeiboCommentsController < ApplicationController 
 
-  def index
+  def list_by_screen_name
     unless params[:screen_name].nil?
       weibo_user = WeiboUser.find_by_screen_name(params[:screen_name])
       begin
@@ -16,8 +16,8 @@ class WeiboCommentsController < ApplicationController
   end
 
   # 根据某条微博id, 显示相关的所有评论
-  def show
-    @weibo_status = WeiboStatus.find_by_weibo_status_id(params[:id])
+  def index
+    @weibo_status = WeiboStatus.find_by_weibo_status_id(params[:weibo_status_id])
     @weibo_user = @weibo_status.weibo_user
     @weibo_comments = @weibo_status.weibo_comments
   end
