@@ -8,9 +8,10 @@
   =render 'weibo/parts/navigation'
   
   .friends
-    - if @friends.any?
+    - if !@friends.blank?
       %ul
       - @friends.each do |friend|
+        - info = friend.json_hash
         %li
-          .avatar= link_to(image_tag(friend['avatar_large']), "/weibo_users/#{friend['idstr']}")
-          .name= link_to friend['screen_name'], "/weibo_users/#{friend['idstr']}"
+          .avatar= link_to(image_tag(info['avatar_large']), "/weibo_users/#{info['id']}")
+          .name= link_to info['screen_name'], "/weibo_users/#{info['id']}"

@@ -23,6 +23,21 @@ class WeiboUser < ActiveRecord::Base
     )
   end
 
+  def friends(weibo_client)
+    response = weibo_client.friendships.friends_bilateral(self.weibo_user_id).parsed
+    users = response['users']
+
+    users.map do |user_info|
+      weibo_user = WeiboUser.find_by_weibo_user_id(user_info['id'])
+      weibo_user = WeiboUser.create_by_api_hash(user_info) if weibo_user.blank?
+      weibo_user
+    end
+  end
+
+  def json_hash
+    ActiveSupport::JSON.decode(self.json)
+  end
+
   STOP_WORDS = begin
     file = File.new File.expand_path(Rails.root.to_s + '/lib/stopwords.txt')
     file.read.split("\r\n") - ['']

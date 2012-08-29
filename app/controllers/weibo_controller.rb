@@ -51,13 +51,7 @@ class WeiboController < ApplicationController
   # 双向关注我的朋友
   def friends
     client = current_user.get_weibo_client
-    response = client.friendships.friends_bilateral_ids(current_user.weibo_auth.weibo_user_id).parsed
-    friend_uid_list = response['ids']
-
-    @friends = []
-    friend_uid_list.each do |uid|
-      @friends << client.users.show(:uid => uid).parsed
-    end
+    @friends = current_user.weibo_auth.weibo_user.friends(client)
   end
 
 end

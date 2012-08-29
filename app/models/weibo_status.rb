@@ -37,7 +37,7 @@ class WeiboStatus < ActiveRecord::Base
   end
 
   def self.refresh(user,uid)
-    params = {}
+    params = {:uid => uid}
     newest_status = WeiboStatus.of_weibo_user_id(uid).first
     if !newest_status.blank?
       params[:since_id] = newest_status.weibo_status_id
