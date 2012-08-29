@@ -13,7 +13,7 @@ class WeiboUsersController < ApplicationController
   def show
     @weibo_user = WeiboUser.find_by_weibo_user_id(params[:id])
     # @weibo_statuses = @weibo_user.weibo_statuses.paginate(:page => params[:page], :per_page => 20).order('id DESC')
-    @weibo_statuses = @weibo_user.weibo_statuses.order('id DESC').all(:limit => 200)
+    @weibo_statuses = @weibo_user.weibo_statuses.limit(200)
   end
 
   # 刷新微博用户最新微博

@@ -1,6 +1,6 @@
 class WeiboUser < ActiveRecord::Base
   has_many :weibo_statuses, 
-           :class_name => 'WeiboStatus', :order => 'created_at',
+           :class_name => 'WeiboStatus', :order => 'weibo_status_id desc',
            :foreign_key => :weibo_user_id, :primary_key => :weibo_user_id
 
 
