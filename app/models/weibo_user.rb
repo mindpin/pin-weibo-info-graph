@@ -3,14 +3,12 @@ class WeiboUser < ActiveRecord::Base
            :class_name => 'WeiboStatus', :order => 'weibo_status_id desc',
            :foreign_key => :weibo_user_id, :primary_key => :weibo_user_id
 
-
   has_many :retweeted_statuses, 
            :class_name => 'WeiboStatus', :order => 'created_at',
            :foreign_key => :weibo_user_id, :primary_key => :weibo_user_id,
            :conditions => ["retweeted_status_id != ''"]
 
-
-  validates_uniqueness_of :weibo_user_id
+  validates :weibo_user_id, :uniqueness => true
 
   def self.create_by_api_hash(user)
     return if user.blank?
@@ -242,7 +240,4 @@ class WeiboUser < ActiveRecord::Base
 
 
 
-  include WeiboComment::WeiboUserMethods
-
- 
 end

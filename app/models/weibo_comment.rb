@@ -33,34 +33,4 @@ class WeiboComment < ActiveRecord::Base
     WeiboUser.create_by_api_hash(comment['user'])
   end
 
-  # --- 给其他类扩展的方法
-  module WeiboUserMethods
-    def self.included(base)
-
-      base.send(:include, InstanceMethods)
-    end
-    
-    module InstanceMethods
-
-      def get_all_comments(user)
-        client = user.get_weibo_client
-
-        statuses = self.weibo_statuses
-        if !statuses.nil? && statuses.any?
-          comments = []
-          statuses.each do |status|
-            response = client.comments.show(status.weibo_status_id).parsed
-            comments = comments + response['comments']
-          end
-        end
-
-        comments
-      end
-      # end of get_all_comments
-        
-    end
-  end
-  # end WeiboUserMethods
-
-
 end

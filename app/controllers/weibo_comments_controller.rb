@@ -1,20 +1,5 @@
 class WeiboCommentsController < ApplicationController 
 
-  def list_by_screen_name
-    unless params[:screen_name].nil?
-      weibo_user = WeiboUser.find_by_screen_name(params[:screen_name])
-      begin
-        comments = weibo_user.get_all_comments(current_user)
-
-        comments.each{|comment|WeiboComment.create_by_api_hash(comment)}
-
-        @comments = WeiboComment.find_all_by_to_weibo_user_id(weibo_user.weibo_user_id)
-      rescue
-        p 'user not in database'
-      end
-    end
-  end
-
   # 根据某条微博id, 显示相关的所有评论
   def index
     @weibo_status = WeiboStatus.find_by_weibo_status_id(params[:weibo_status_id])
