@@ -6,7 +6,7 @@ class WeiboCommentsController < ApplicationController
       begin
         comments = weibo_user.get_all_comments(current_user)
 
-        WeiboComment.save_comments(comments)
+        comments.each{|comment|WeiboComment.create_by_api_hash(comment)}
 
         @comments = WeiboComment.find_all_by_to_weibo_user_id(weibo_user.weibo_user_id)
       rescue

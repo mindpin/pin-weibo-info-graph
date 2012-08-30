@@ -13,14 +13,23 @@ class WeiboUser < ActiveRecord::Base
   validates_uniqueness_of :weibo_user_id
 
   def self.create_by_api_hash(user)
-    WeiboUser.create(
-      :weibo_user_id => user['id'],
+    return if user.blank?
+    weibo_user = WeiboUser.find_by_weibo_user_id(user['id'])
+
+    attrs = {
       :screen_name => user['screen_name'],
       :profile_image_url => user['profile_image_url'],
       :gender  => user['gender'],
       :description => user['description'],
       :json => user.to_json
-    )
+    }
+
+    if weibo_user.blank?
+      WeiboUser.create(attrs.merge(:weibo_user_id => user['id']))
+    else
+      weibo_user.update_attributes(attrs)
+    end
+
   end
 
   def friends_bilateral(weibo_client)

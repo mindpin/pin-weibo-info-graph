@@ -38,7 +38,7 @@ class WeiboController < ApplicationController
       weibo_statuses = WeiboStatus.get_weibo_statuses(current_user, screen_name, count)
 
       # 存到数据库
-      WeiboStatus.store_weibo_statuses(weibo_statuses)
+      weibo_statuses.each{|status|WeiboStatus.create_by_api_hash(status)}
 
       # 统计查询
       @weibo_user = WeiboUser.find_by_screen_name(screen_name)

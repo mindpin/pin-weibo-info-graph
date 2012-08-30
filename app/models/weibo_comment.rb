@@ -7,13 +7,14 @@ class WeiboComment < ActiveRecord::Base
              :class_name => 'WeiboStatus', 
              :foreign_key => :weibo_status_id, :primary_key => :weibo_status_id
   
-  validates_uniqueness_of :weibo_comment_id
+  validates :weibo_comment_id, :uniqueness => true
 
   validates :weibo_comment_id, 
             :text, :weibo_user_id, 
             :weibo_status_id, :weibo_created_at, :json, :to_weibo_user_id,  :presence => true
 
   def self.create_by_api_hash(comment)
+    return if comment.blank?
     return if !WeiboComment.find_by_weibo_comment_id(comment['idstr']).blank?
 
     weibo_created_at = Date.parse(comment['created_at']) unless comment['created_at'].blank?
@@ -27,26 +28,10 @@ class WeiboComment < ActiveRecord::Base
       :json => comment.to_json,
       :to_weibo_user_id => comment['status']['user']['id']
     )
+
+    WeiboStatus.create_by_api_hash(comment['status'])
+    WeiboUser.create_by_api_hash(comment['user'])
   end
-
-  def self.save_comments(comments)
-    if comments.nil?
-      return
-    end
-
-    comments.each do |comment|
-
-      WeiboComment.create_by_api_hash(comment)
-
-      WeiboStatus.save_new(comment['status'])
-
-      # 创建微博用户
-      WeiboStatus.create_weibo_user(comment)
-    end
-  end
-  # end of save_comments
-
-
 
   # --- 给其他类扩展的方法
   module WeiboUserMethods

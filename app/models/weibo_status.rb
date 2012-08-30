@@ -12,7 +12,7 @@ class WeiboStatus < ActiveRecord::Base
 
 
   # 验证
-  validates_uniqueness_of :weibo_status_id
+  validates :weibo_status_id, :uniqueness=> true
 
 
   # scope
@@ -63,7 +63,7 @@ class WeiboStatus < ActiveRecord::Base
       params[:since_id] = newest_status.weibo_status_id
     end
     weibo_statuses = self._get_weibo_statuses(client, 200, params)
-    WeiboStatus.store_weibo_statuses(weibo_statuses)
+    weibo_statuses.each{|status|WeiboStatus.create_by_api_hash(status)}
   end
 
   # 先根据 api 获取微博列表
@@ -91,100 +91,35 @@ class WeiboStatus < ActiveRecord::Base
     end
     weibo_statuses
   end
-  # end get_weibo_statuses
 
-  
-  # 采集存到数据表
-  def self.store_weibo_statuses(weibo_statuses)
+  def self.create_by_api_hash(status)
+    return if status.blank?
+    return if !WeiboStatus.find_by_weibo_status_id(status['id']).blank?
     
-    unless weibo_statuses.nil?
-      weibo_statuses.each do |weibo|
-        save_new(weibo)
-      end
+    retweeted_status = status['retweeted_status']
+    retweeted_status_id = retweeted_status.blank? ? '' : retweeted_status['id']
 
-    end
-    
-  end
-  # end of store_weibo_statuses
-
-
-  def self.save_new(weibo)
-    if weibo.blank?
-      return
-    end
-    
-    retweeted_status = weibo['retweeted_status'].nil?? '': weibo['retweeted_status']
-    weibo_user_id = weibo['user'].nil?? '': weibo['user']['id']
-    weibo_created_at = Date.parse(weibo['created_at']) unless weibo['created_at'].blank?
-
+    weibo_user_id = status['user'].blank? ? '' : status['user']['id']
+    weibo_created_at = Date.parse(status['created_at']) unless status['created_at'].blank?
 
     # 创建 WeiboStatus 记录
     WeiboStatus.create(
-      :weibo_status_id => weibo['id'],
+      :weibo_status_id => status['id'],
       :weibo_user_id => weibo_user_id,
-      :text => weibo['text'],
-      :retweeted_status_id => retweeted_status['id'],
-      :bmiddle_pic => weibo['bmiddle_pic'],
-      :original_pic => weibo['original_pic'],
-      :thumbnail_pic => weibo['thumbnail_pic'],
+      :text => status['text'],
+      :retweeted_status_id => retweeted_status_id,
+      :bmiddle_pic => status['bmiddle_pic'],
+      :original_pic => status['original_pic'],
+      :thumbnail_pic => status['thumbnail_pic'],
       :weibo_created_at => weibo_created_at,
-      :json => weibo.to_json
+      :json => status.to_json
     )
 
     # 根据 retweeted_status 再创新新的 WeiboStatus 记录
-    create_retweeted_status(retweeted_status)
+    WeiboStatus.create_by_api_hash(retweeted_status) if !retweeted_status.blank?
 
     # 创建微博用户
-    create_weibo_user(weibo)
+    WeiboUser.create_by_api_hash(status['user'])
   end
-  # end of save_new
-
   
-  # begin 根据 retweeted_status 字段 创建新的 WeiboStatus
-  def self.create_retweeted_status(retweeted_status)
-    if retweeted_status.blank?
-      return
-    end
-
-    weibo_user_id = retweeted_status['user'].nil?? '': retweeted_status['user']['id']
-
-    weibo_created_at = Date.parse(retweeted_status['created_at']) unless retweeted_status['created_at'].blank?
-
-    WeiboStatus.create(
-      :weibo_status_id => retweeted_status['idstr'],
-      :weibo_user_id => weibo_user_id,
-      :text => retweeted_status['text'],
-      :retweeted_status_id => '',
-      :bmiddle_pic => retweeted_status['bmiddle_pic'],
-      :original_pic => retweeted_status['original_pic'],
-      :thumbnail_pic => retweeted_status['thumbnail_pic'],
-      :weibo_created_at => weibo_created_at,
-      :json => retweeted_status.to_json
-    )
-
-    # 创建微博用户
-    create_weibo_user(retweeted_status)
-  end
-  # end of create_retweeted_status
-
-
-  def self.create_weibo_user(weibo)
-    unless weibo['user'].nil?
-      WeiboUser.create(
-        :weibo_user_id => weibo['user']['id'],
-        :screen_name => weibo['user']['screen_name'],
-        :profile_image_url => weibo['user']['profile_image_url'],
-        :gender  => weibo['user']['gender'],
-        :description => weibo['user']['description'],
-        :json => weibo['user'].to_json
-      )
-    else
-      p weibo
-    end
-
-  end
-  # end create_weibo_user
-
-
-
 end

@@ -28,7 +28,7 @@ class UserWeiboAuth < ActiveRecord::Base
       options[:since_id] = comment.weibo_comment_id
     end
     comments = get_my_comments_by_count(200,options)
-    WeiboComment.save_comments(comments)
+    comments.each{|comment|WeiboComment.create_by_api_hash(comment)}
   end
 
   def refresh_received_comments
@@ -38,7 +38,7 @@ class UserWeiboAuth < ActiveRecord::Base
       options[:since_id] = comment.weibo_comment_id
     end
     comments = get_received_comments_by_count(200,options)
-    WeiboComment.save_comments(comments)
+    comments.each{|comment|WeiboComment.create_by_api_hash(comment)}
   end
   
   # 采集我发出的评论
@@ -129,9 +129,7 @@ class UserWeiboAuth < ActiveRecord::Base
       # begin set_new_weibo_auth
       def set_new_weibo_auth(auth_code, client)
         # 如果过期重新设置的话，先删除，后面再创建新的
-        if !self.weibo_auth.blank?
-          self.weibo_auth.destroy
-        end
+        self.weibo_auth.destroy if !self.weibo_auth.blank?
 
         response = client.account.get_uid.parsed
         user = client.users.show(response).parsed
