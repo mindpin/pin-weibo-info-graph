@@ -29,18 +29,14 @@ class WeiboUser < ActiveRecord::Base
     else
       weibo_user.update_attributes(attrs)
     end
-
+    weibo_user
   end
 
   def friends_bilateral(weibo_client)
     response = weibo_client.friendships.friends_bilateral(self.weibo_user_id).parsed
     users = response['users']
 
-    users.map do |user_info|
-      weibo_user = WeiboUser.find_by_weibo_user_id(user_info['id'])
-      weibo_user = WeiboUser.create_by_api_hash(user_info) if weibo_user.blank?
-      weibo_user
-    end
+    users.map {|user_info|WeiboUser.create_by_api_hash(user_info)}
   end
 
   def json_hash
