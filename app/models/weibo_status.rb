@@ -8,7 +8,7 @@ class WeiboStatus < ActiveRecord::Base
              :foreign_key => :weibo_user_id, :primary_key => :weibo_user_id
 
   has_many :weibo_comments, :class_name => 'WeiboComment', :foreign_key => :weibo_status_id,
-    :primary_key => :weibo_status_id
+    :primary_key => :weibo_status_id, :order => 'weibo_comments.weibo_comment_id desc'
 
 
   # 验证
@@ -21,15 +21,34 @@ class WeiboStatus < ActiveRecord::Base
 
   
   # 刷新微博对应的评论
-  def refresh_comments(user)
-    client = user.get_weibo_client
-    response = client.comments.show(self.weibo_status_id).parsed
-    comments = response['comments']
+  def refresh_comments(client)
+    comments = get_comments(client,200)
+    comments.each{|comment| WeiboComment.create_by_api_hash(comment)}
+  end
 
-    unless comments.nil?
-      WeiboComment.destroy_all(:weibo_status_id => self.weibo_status_id)
-      WeiboComment.save_comments(comments)
+  def get_comments(client,count)
+    options = {}
+    comment = self.weibo_comments.first
+    options[:since_id] = comment.weibo_comment_id if !comment.blank?
+
+    current_page = 1
+    all_comments = []
+    while true do
+      response = client.comments.show(self.weibo_status_id,options.merge(:page => current_page, :count => 20)).parsed
+      comments = response['comments']
+      break if comments.blank?
+
+      if all_comments.count + comments.count < count
+        all_comments+=comments
+        current_page+=1
+      else
+        index = count - all_comments.count
+        all_comments += comments[0...index]
+        break
+      end
     end
+
+    all_comments
   end
 
   def self.get_weibo_statuses(user, screen_name, count)
