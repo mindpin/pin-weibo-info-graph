@@ -27,27 +27,6 @@ class WeiboController < ApplicationController
     redirect_to :back
   end
 
-  # 根据 weibo api 把数据采集到本地
-  def stats
-    unless params[:screen_name].blank?
-
-      screen_name = params[:screen_name]
-      count = params[:count].blank?? 0: params[:count].to_i
-
-      # 先根据 api 获取微博列表
-      weibo_statuses = WeiboStatus.get_weibo_statuses(current_user, screen_name, count)
-
-      # 存到数据库
-      weibo_statuses.each{|status|WeiboStatus.create_by_api_hash(status)}
-
-      # 统计查询
-      @weibo_user = WeiboUser.find_by_screen_name(screen_name)
-
-    end
-  end
-  # end of stats
-
-
   # 双向关注我的朋友
   def friends
     client = current_user.get_weibo_client

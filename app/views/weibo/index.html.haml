@@ -7,9 +7,6 @@
 #right-weibo-box
   =render 'weibo/parts/navigation'
 
-.page-weibo-notice
-  .to-stat= link_to '统计微博信息', "/weibo/stats"
-
   = form_tag '/weibo', :method => 'create' do
     .field
       %label 微博正文

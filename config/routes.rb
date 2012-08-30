@@ -12,7 +12,6 @@ PinWorkResultsShow::Application.routes.draw do
   resources :weibo do
     collection do
       get :callback
-      get :stats
       get :friends
     end
   end
@@ -25,7 +24,6 @@ PinWorkResultsShow::Application.routes.draw do
   end
   # end of weibo users
 
-  get '/weibo_comments_by_screen_name' => 'weibo_comments#list_by_screen_name'
   # begin of weibo comments
   resources :weibo_comments,:except => [:index] do
     collection do
