@@ -37,6 +37,22 @@ class WeiboUser < ActiveRecord::Base
     users.map {|user_info|WeiboUser.create_by_api_hash(user_info)}.compact
   end
 
+  def refresh_statuses(client)
+    params = {:uid => self.weibo_user_id}
+    newest_status = self.weibo_statuses.first
+    if !newest_status.blank?
+      params[:since_id] = newest_status.weibo_status_id
+    end
+
+      # 先根据 api 获取微博列表
+    weibo_statuses = loop_to_request_weibo_api(200) do |current_page|
+      user_weibo = client.statuses.user_timeline(params.merge(:page => current_page, :count => 20)).parsed
+      user_weibo['statuses']
+    end
+
+    weibo_statuses.each{|status|WeiboStatus.create_by_api_hash(status)}
+  end
+
   def json_hash
     ActiveSupport::JSON.decode(self.json)
   end

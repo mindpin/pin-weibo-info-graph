@@ -8,7 +8,7 @@
   =render 'weibo/parts/navigation', :weibo_user_id => @weibo_user.weibo_user_id
   
   .field.submit
-    %a.form-submit-button{:href=>"/weibo_users/#{@weibo_user.weibo_user_id}/refresh"} 刷新
+    %a.form-submit-button{:href=>"/weibo_users/#{@weibo_user.weibo_user_id}/refresh_statuses"} 刷新
   
   .page-weibo-user-show{:'data-weibo-user-id'=>@weibo_user.weibo_user_id}
     .to-comment

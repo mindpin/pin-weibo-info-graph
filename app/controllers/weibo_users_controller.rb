@@ -17,10 +17,12 @@ class WeiboUsersController < ApplicationController
   end
 
   # 刷新微博用户最新微博
-  def refresh
+  def refresh_statuses
     client = current_user.get_weibo_client
     uid = params[:id]
-    WeiboStatus.refresh(client,uid)
+
+    @weibo_user = WeiboUser.find_by_weibo_user_id(uid)
+    @weibo_user.refresh_statuses(client)
 
     redirect_to "/weibo_users/#{uid}"
   end
