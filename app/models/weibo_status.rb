@@ -31,29 +31,10 @@ class WeiboStatus < ActiveRecord::Base
     comment = self.weibo_comments.first
     options[:since_id] = comment.weibo_comment_id if !comment.blank?
 
-    current_page = 1
-    all_comments = []
-    while true do
+    loop_to_request_weibo_api(count) do |current_page|
       response = client.comments.show(self.weibo_status_id,options.merge(:page => current_page, :count => 20)).parsed
-      comments = response['comments']
-      break if comments.blank?
-
-      if all_comments.count + comments.count < count
-        all_comments+=comments
-        current_page+=1
-      else
-        index = count - all_comments.count
-        all_comments += comments[0...index]
-        break
-      end
+      response['comments']
     end
-
-    all_comments
-  end
-
-  def self.get_weibo_statuses(user, screen_name, count)
-    client = user.get_weibo_client
-    self._get_weibo_statuses(client, count, :screen_name => screen_name)
   end
 
   def self.refresh(client,uid)
@@ -68,28 +49,10 @@ class WeiboStatus < ActiveRecord::Base
 
   # 先根据 api 获取微博列表
   def self._get_weibo_statuses(client, count, options = {})
-    if count <= 20
-      user_weibo = client.statuses.user_timeline(options.merge(:page => 1, :count => 20)).parsed
-      return user_weibo['statuses']
-    end
-
-    weibo_statuses = []
-    current_page = 1
-    while true do
+    loop_to_request_weibo_api(count) do |current_page|
       user_weibo = client.statuses.user_timeline(options.merge(:page => current_page, :count => 20)).parsed
-      single_weibo_statuses = user_weibo['statuses']
-      break if single_weibo_statuses.blank?
-
-      if weibo_statuses.count + single_weibo_statuses.count < count
-        weibo_statuses += single_weibo_statuses
-        current_page += 1
-      else
-        index = count - weibo_statuses.count
-        weibo_statuses += single_weibo_statuses[0...index]
-        break
-      end
+      user_weibo['statuses']
     end
-    weibo_statuses
   end
 
   def self.create_by_api_hash(status)

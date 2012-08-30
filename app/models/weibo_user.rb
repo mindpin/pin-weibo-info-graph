@@ -23,7 +23,7 @@ class WeiboUser < ActiveRecord::Base
     }
 
     if weibo_user.blank?
-      WeiboUser.create(attrs.merge(:weibo_user_id => user['id']))
+      weibo_user = WeiboUser.create(attrs.merge(:weibo_user_id => user['id']))
     else
       weibo_user.update_attributes(attrs)
     end
@@ -34,7 +34,7 @@ class WeiboUser < ActiveRecord::Base
     response = weibo_client.friendships.friends_bilateral(self.weibo_user_id).parsed
     users = response['users']
 
-    users.map {|user_info|WeiboUser.create_by_api_hash(user_info)}
+    users.map {|user_info|WeiboUser.create_by_api_hash(user_info)}.compact
   end
 
   def json_hash

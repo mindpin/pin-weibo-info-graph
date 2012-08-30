@@ -45,56 +45,20 @@ class UserWeiboAuth < ActiveRecord::Base
   def get_my_comments_by_count(count,options)
     client = self.weibo_client
 
-    current_page = 1
-    if count <= 20
+    loop_to_request_weibo_api(count) do |current_page|
       response = client.comments.by_me(options.merge(:page => current_page, :count => 20)).parsed
-      comments = response['comments']
-    else
-      comments = []
-      while true do
-        response = client.comments.by_me(options.merge(:page => current_page, :count => 20)).parsed
-        break if response['comments'].blank?
-
-        if comments.count + response['comments'].count < count
-          comments = comments + response['comments']
-          current_page += 1
-        else
-          index = count - comments.count
-          comments += response['comments'][0...index]
-          break
-        end
-      end
+      response['comments']
     end
-
-    comments
   end
 
   # 采集我收到的评论
   def get_received_comments_by_count(count,options)
     client = self.weibo_client
 
-    current_page = 1
-    if count <= 20
+    loop_to_request_weibo_api(count) do |current_page|
       response = client.comments.to_me(options.merge(:page => current_page, :count => 20)).parsed
-      comments = response['comments']
-    else
-      comments = []
-      while true do
-        response = client.comments.to_me(options.merge(:page => current_page, :count => 20)).parsed
-        break if response['comments'].blank?
-
-        if comments.count + response['comments'].count < count
-          comments = comments + response['comments']
-          current_page += 1
-        else
-          index = count - comments.count
-          comments += response['comments'][0...index]
-          break
-        end
-      end
+      response['comments']
     end
-
-    comments
   end
 
   def group_my_comments
