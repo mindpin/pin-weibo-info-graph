@@ -47,13 +47,8 @@ class WeiboUsersController < ApplicationController
 
   
   # 微博用户 和 我 的关系
-  def connections
-    weibo_user_a = current_user.weibo_auth.weibo_user.screen_name
-    weibo_user_b = @weibo_user.screen_name
-
-    p weibo_user_a
-    p weibo_user_b
-
-    @connection_friends = WeiboUser.get_connections(current_user, weibo_user_a, weibo_user_b)
+  def relation
+    client = current_user.get_weibo_client
+    @relations = current_user.weibo_auth.weibo_user.relation(client,@weibo_user)
   end
 end

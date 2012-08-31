@@ -20,7 +20,7 @@ PinWorkResultsShow::Application.routes.draw do
     member do
       get :word_stats
       get :refresh_statuses
-      get :connections
+      get :relation
     end
 
     collection do
@@ -65,10 +65,6 @@ PinWorkResultsShow::Application.routes.draw do
 
       # 统计分析：被评论趋势
       get :stats11
-
-      # 互相关注度
-      get :stats12
-      post :stats12_submit
 
       # 粉丝 微博用户关注的用户
       get :stats13

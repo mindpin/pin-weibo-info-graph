@@ -3,23 +3,23 @@
 development:
   adapter: mysql2
   encoding: utf8
-  database: pin-weibo
+  database: pin-weibo-graph
   username: root
-  password: '111111'
+  password: root
   host: localhost
 
 test:
   adapter: mysql2
   encoding: utf8
-  database: pin-weibo-test
+  database: pin-weibo-graph-test
   username: root
-  password: '111111'
+  password: root
   host: localhost
 
 production:
   adapter: mysql2
   encoding: utf8
-  database: pin-weibo-production
+  database: pin-weibo-graph-production
   username: root
-  password: '111111'
+  password: root
   host: localhost
