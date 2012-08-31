@@ -6,6 +6,8 @@
 
 #right-weibo-box
   =render 'weibo/parts/navigation'
+  =render 'weibo_users/parts/search_users'
+
 
   = form_tag '/weibo', :method => 'create' do
     .field

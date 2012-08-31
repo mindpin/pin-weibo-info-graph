@@ -12,7 +12,7 @@ PinWorkResultsShow::Application.routes.draw do
   resources :weibo do
     collection do
       get :callback
-      get :friends
+      
     end
   end
 
@@ -20,6 +20,11 @@ PinWorkResultsShow::Application.routes.draw do
     member do
       get :word_stats
       get :refresh_statuses
+    end
+
+    collection do
+      get :search
+      get :friends
     end
   end
   # end of weibo users

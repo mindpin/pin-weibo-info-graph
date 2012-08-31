@@ -6,6 +6,7 @@
 
 #right-weibo-box
   =render 'weibo/parts/navigation', :weibo_user_id => @weibo_user.weibo_user_id
+  =render 'weibo_users/parts/search_users'
   
   .field.submit
     %a.form-submit-button{:href=>"/weibo_users/#{@weibo_user.weibo_user_id}/refresh_statuses"} 刷新

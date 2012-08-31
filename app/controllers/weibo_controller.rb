@@ -27,10 +27,6 @@ class WeiboController < ApplicationController
     redirect_to :back
   end
 
-  # 双向关注我的朋友
-  def friends
-    client = current_user.get_weibo_client
-    @friends = current_user.weibo_auth.weibo_user.friends_bilateral(client)
-  end
+  
 
 end

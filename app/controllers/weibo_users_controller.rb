@@ -10,6 +10,33 @@ class WeiboUsersController < ApplicationController
     @top_20_words = words[0..19]
   end
 
+
+  # 搜索微博用户
+  def search
+    keyword = URI.escape(params[:query])
+    client = current_user.get_weibo_client
+    response = client.search.suggestions_users(keyword).body
+
+    users = ActiveSupport::JSON.decode response
+
+    @users = []
+    if !users.blank?
+      users.each do |user|
+        user_info = client.users.show(:uid => user['uid']).parsed
+        WeiboUser.create_by_api_hash(user_info)
+
+        @users << user_info
+      end
+    end
+  end
+
+
+  # 双向关注我的朋友
+  def friends
+    client = current_user.get_weibo_client
+    @friends = current_user.weibo_auth.weibo_user.friends_bilateral(client)
+  end
+
   def show
     @weibo_user = WeiboUser.find_by_weibo_user_id(params[:id])
     # @weibo_statuses = @weibo_user.weibo_statuses.paginate(:page => params[:page], :per_page => 20).order('id DESC')
