@@ -19,5 +19,5 @@
     - else
       - @relations.each do |relation|
         .relation
-          = relation.each do |weibo_user|
-            - image_tag(@weibo_user['profile_image_url'])
+          - relation.each do |weibo_user|
+            = image_tag(weibo_user['profile_image_url'])

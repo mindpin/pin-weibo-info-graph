@@ -153,6 +153,8 @@ class WeiboUser < ActiveRecord::Base
     common_friends.each do |weibo_user|
       relations << [self, weibo_user, other_weibo_user]
     end
+    
+=begin 
 
     # self <=> xxx_1 <=> xxx_2 <=> other_weibo_user
     # self <=> xxx_1 <=> xxx <=> xxx_2 <=> other_weibo_user
@@ -187,6 +189,7 @@ class WeiboUser < ActiveRecord::Base
         end
       end
     end
+=end
 
     relations
   end
