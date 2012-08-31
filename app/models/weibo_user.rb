@@ -30,6 +30,17 @@ class WeiboUser < ActiveRecord::Base
     weibo_user
   end
 
+  def self.search(client,query)
+    response = client.search.suggestions_users(query).body
+    users = ActiveSupport::JSON.decode response
+    return [] if users.blank?
+
+    users.map do |user|
+      user_info = client.users.show(:uid => user['uid']).parsed
+      WeiboUser.create_by_api_hash(user_info)
+    end
+  end
+
   def friends_bilateral(weibo_client)
     response = weibo_client.friendships.friends_bilateral(self.weibo_user_id).parsed
     users = response['users']

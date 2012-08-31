@@ -19,28 +19,14 @@ class WeiboUsersController < ApplicationController
 
   # 搜索微博用户
   def search
-    keyword = URI.escape(params[:query])
     client = current_user.get_weibo_client
-    response = client.search.suggestions_users(keyword).body
-
-    users = ActiveSupport::JSON.decode response
-
-    @users = []
-    if !users.blank?
-      users.each do |user|
-        user_info = client.users.show(:uid => user['uid']).parsed
-        WeiboUser.create_by_api_hash(user_info)
-
-        @users << user_info
-      end
-    end
+    @weibo_users = WeiboUser.search(client,params[:query])
   end
-
 
   # 双向关注我的朋友
   def friends
     client = current_user.get_weibo_client
-    @friends = current_user.weibo_auth.weibo_user.friends_bilateral(client)
+    @weibo_users = current_user.weibo_auth.weibo_user.friends_bilateral(client)
   end
 
   def show

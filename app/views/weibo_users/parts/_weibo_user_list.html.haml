@@ -1,0 +1,8 @@
+.weibo-users-list
+  - if !weibo_users.blank?
+    %ul
+    - weibo_users.each do |weibo_user|
+      - info = weibo_user.json_hash
+      %li
+        .avatar= link_to(image_tag(info['avatar_large']), "/weibo_users/#{info['id']}")
+        .name= link_to info['screen_name'], "/weibo_users/#{info['id']}"
