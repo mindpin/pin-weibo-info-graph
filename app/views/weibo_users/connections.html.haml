@@ -1,0 +1,15 @@
+- hbreadcrumb '首页', '#'
+
+
+#left-weibo-box
+  =render 'weibo/parts/current_user_weibo_profile'
+
+#right-weibo-box
+  =render 'weibo/parts/navigation'
+  
+  .page-relation
+    - if @connection_friends.nil?
+      = '联系人超过三层'
+    - else
+      - @connection_friends.each do |friend|
+        = friend

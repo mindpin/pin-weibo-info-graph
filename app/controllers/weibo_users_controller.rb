@@ -53,4 +53,15 @@ class WeiboUsersController < ApplicationController
 
     redirect_to "/weibo_users/#{uid}"
   end
+
+  
+  # 微博用户 和 我 的关系
+  def connections
+    weibo_user_a = current_user.weibo_auth.weibo_user.screen_name
+
+    weibo_user = WeiboUser.find_by_weibo_user_id(params[:id])
+    weibo_user_b = weibo_user.screen_name
+
+    @connection_friends = WeiboUser.get_connections(current_user, weibo_user_a, weibo_user_b)
+  end
 end

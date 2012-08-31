@@ -20,6 +20,7 @@ PinWorkResultsShow::Application.routes.draw do
     member do
       get :word_stats
       get :refresh_statuses
+      get :connections
     end
 
     collection do
