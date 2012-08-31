@@ -7,6 +7,12 @@
 #right-weibo-box
   =render 'weibo/parts/navigation', :weibo_user_id => @weibo_user.weibo_user_id
   =render 'weibo_users/parts/search_users'
+
+  .field
+    .avatar= link_to(image_tag(@weibo_user['profile_image_url']), "/weibo_users/#{@weibo_user['weibo_user_id']}")
+    .name= link_to @weibo_user['screen_name'], "/weibo_users/#{@weibo_user['weibo_user_id']}"
+
+    .relation= link_to "查看和我的关系", "/weibo_users/#{@weibo_user['weibo_user_id']}/connections"
   
   .field.submit
     %a.form-submit-button{:href=>"/weibo_users/#{@weibo_user.weibo_user_id}/refresh_statuses"} 刷新
