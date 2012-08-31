@@ -6,6 +6,12 @@
 
 #right-weibo-box
   =render 'weibo/parts/navigation'
+
+  .field
+    .avatar= link_to(image_tag(@weibo_user['profile_image_url']), "/weibo_users/#{@weibo_user['weibo_user_id']}")
+    .name= link_to @weibo_user['screen_name'], "/weibo_users/#{@weibo_user['weibo_user_id']}"
+
+    .relation= link_to "查看和我的关系", "/weibo_users/#{@weibo_user['weibo_user_id']}/connections"
   
   .page-relation
     - if @connection_friends.nil?
