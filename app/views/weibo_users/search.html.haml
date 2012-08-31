@@ -8,10 +8,4 @@
   =render 'weibo/parts/navigation'
   =render 'weibo_users/parts/search_users'
   
-  .friends
-    - if !@users.blank?
-      %ul
-      - @users.each do |user|
-        %li
-          .avatar= link_to(image_tag(user['avatar_large']), "/weibo_users/#{user['id']}")
-          .name= link_to user['screen_name'], "/weibo_users/#{user['id']}"
+  =render 'weibo_users/parts/weibo_user_list', :weibo_users => @weibo_users

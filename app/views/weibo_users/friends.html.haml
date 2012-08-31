@@ -6,12 +6,6 @@
 
 #right-weibo-box
   =render 'weibo/parts/navigation'
+
+  =render 'weibo_users/parts/weibo_user_list', :weibo_users => @weibo_users
   
-  .friends
-    - if !@friends.blank?
-      %ul
-      - @friends.each do |friend|
-        - info = friend.json_hash
-        %li
-          .avatar= link_to(image_tag(info['avatar_large']), "/weibo_users/#{info['id']}")
-          .name= link_to info['screen_name'], "/weibo_users/#{info['id']}"

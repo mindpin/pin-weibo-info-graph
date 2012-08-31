@@ -14,13 +14,13 @@ class WeiboUsersController < ApplicationController
   # 搜索微博用户
   def search
     client = current_user.get_weibo_client
-    @users = WeiboUser.search(client,params[:query])
+    @weibo_users = WeiboUser.search(client,params[:query])
   end
 
   # 双向关注我的朋友
   def friends
     client = current_user.get_weibo_client
-    @friends = current_user.weibo_auth.weibo_user.friends_bilateral(client)
+    @weibo_users = current_user.weibo_auth.weibo_user.friends_bilateral(client)
   end
 
   def show
