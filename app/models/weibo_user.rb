@@ -133,7 +133,8 @@ class WeiboUser < ActiveRecord::Base
 
     # 第一层关系判断
     if a_friends.include?(weibo_user_b)
-      return connections
+      p 11111111111111111111111111111111
+      return [weibo_user_a, weibo_user_b]
     else
       b_friends = WeiboUser.get_friendships(user, weibo_user_b)
 
