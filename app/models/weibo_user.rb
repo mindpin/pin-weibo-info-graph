@@ -136,101 +136,63 @@ class WeiboUser < ActiveRecord::Base
     years_data
   end
 
-  
-  # 取得两个用户之间通过多少人可以联系起来
-  def self.get_connections(user, weibo_user_a, weibo_user_b)
-    a_friends = WeiboUser.get_friendships(user, weibo_user_a)
-    connections = []
 
-    # 第一层关系判断
-    if a_friends.include?(weibo_user_b)
-      p 11111111111111111111111111111111
-      return [weibo_user_a, weibo_user_b]
-    else
-      b_friends = WeiboUser.get_friendships(user, weibo_user_b)
+  def relation(client, other_weibo_user)
+    relations = []
 
-      # 第二层关系判断
-      b_friends.each do |b_friend|
-        if a_friends.include?(b_friend)
-          connections << b_friend
-        end
-      end
-      # 结束第二层关系判断
+    self_friends = self.friends_bilateral(client)
 
-      # 第三层
-      unless connections.any?
-        b_friends.each do |b_friend|
-          b_b_friends = WeiboUser.get_friendships(user, b_friend)
-          b_b_friends.each do |b_b_friend|
-            if a_friends.include?(b_b_friend)
-              connections << b_friend
-              connections << b_b_friend
-              return connections
-            end
-          end
-        end
-      end
-
-      unless connections.any?
-        a_friends.each do |a_friend|
-          a_a_friends = WeiboUser.get_friendships(user, a_friend)
-          a_a_friends.each do |a_a_friend|
-            if b_friends.include?(a_a_friend)
-              connections << a_friend
-              connections << a_a_friend
-              return connections
-            end
-          end
-        end
-      end
-      # 结束第三层
-
-
-      # 第四层
-      a_friends.each do |a_friend|
-        a_a_friends = WeiboUser.get_friendships(user, a_friend)
-        a_a_friends.each do |a_a_friend|
-          b_friends.each do |b_friend|
-            b_b_friends = WeiboUser.get_friendships(user, b_friend)
-            if b_b_friends.include?(a_a_friend)
-              connections << a_friend
-              connections << a_a_friend
-              connections << b_friend
-              return connections
-            end
-          end
-        end
-      end
-      # 结束第四层
-
+    # self <=> other_weibo_user
+    if self_friends.include?(other_weibo_user)
+      relations << [self, other_weibo_user]
     end
-    # 结束第一层关系判断
 
-    return nil
+    # self <=> xxx_1 <=> other_weibo_user
+    other_weibo_user_friends = other_weibo_user.friends_bilateral(client)
+    common_friends = other_weibo_user_friends & self_friends
+    common_friends.each do |weibo_user|
+      relations << [self, weibo_user, other_weibo_user]
+    end
+    
+=begin 
+
+    # self <=> xxx_1 <=> xxx_2 <=> other_weibo_user
+    # self <=> xxx_1 <=> xxx <=> xxx_2 <=> other_weibo_user
+    # self_friends_friends = {
+    #   friend_a => [friend_a_friends],
+    #   friend_b => [friend_b_friends]
+    # }
+    self_friends_friends = {}
+    self_friends.each do |weibo_user|
+      self_friends_friends[weibo_user] = weibo_user.friends_bilateral(client)
+    end
+
+    other_weibo_user_friends_friends = {}
+    other_weibo_user_friends.each do |weibo_user|
+      other_weibo_user_friends_friends[weibo_user] = weibo_user.friends_bilateral(client)
+    end
+
+    # self <=> xxx_1 <=> xxx_2 <=> other_weibo_user
+    self_friends_friends.each do |friend, friend_friends|
+      common_friends = friend_friends & other_weibo_user_friends
+      common_friends.each do |weibo_user|
+        relations << [self, friend, weibo_user, other_weibo_user]
+      end
+    end
+
+    # self <=> xxx_1 <=> xxx <=> xxx_2 <=> other_weibo_user
+    self_friends_friends.each do |self_friend, self_friend_friends|
+      other_weibo_user_friends_friends.each do |other_friend, other_friend_friends|
+        common_friends = self_friend_friends & other_friend_friends
+        common_friends.each do |weibo_user|
+          relations << [self, self_friend, weibo_user, other_friend, other_weibo_user]
+        end
+      end
+    end
+=end
+
+    relations
   end
-
-  
-  # 根据 screen_name 取当该微博用户关注粉丝
-  def self.get_friendships(user, screen_name)
-    if screen_name.blank?
-      return []
-    end
-
-    client = user.weibo_auth.weibo_client
-    user = client.users.show(:screen_name => screen_name).parsed
-
-    friendships = []
-    friends = client.friendships.friends_bilateral(user['id']).parsed
-    if !friends['users'].nil? && friends['users'].any?
-      friends['users'].each do |friend|
-        friendships << friend['screen_name']
-      end
-    end
-
-    friendships
-
-  end
-
 
   # 用户 descriptions 分词，同时储存使用相应关键字对应的用户列表
   def combine_descriptions(users)

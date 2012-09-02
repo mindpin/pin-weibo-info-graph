@@ -11,11 +11,13 @@
     .avatar= link_to(image_tag(@weibo_user['profile_image_url']), "/weibo_users/#{@weibo_user['weibo_user_id']}")
     .name= link_to @weibo_user['screen_name'], "/weibo_users/#{@weibo_user['weibo_user_id']}"
 
-    .relation= link_to "查看和我的关系", "/weibo_users/#{@weibo_user['weibo_user_id']}/connections"
+    .relation= link_to "查看和我的关系", "/weibo_users/#{@weibo_user['weibo_user_id']}/relation"
   
-  .page-relation
-    - if @connection_friends.nil?
+  .page-relations
+    - if @relations.blank?
       = '联系人超过三层'
     - else
-      - @connection_friends.each do |friend|
-        = friend
+      - @relations.each do |relation|
+        .relation
+          - relation.each do |weibo_user|
+            = image_tag(weibo_user['profile_image_url'])

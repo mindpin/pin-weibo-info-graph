@@ -44,9 +44,9 @@ module PinWorkResultsShow
 
     config.autoload_paths += Dir["#{Rails.root}/lib/**/"]
 
-    Weibo2::Config.api_key = "1599485897"
-    Weibo2::Config.api_secret = "989e5aa721ca65d5e8abfac21128c53d"
-    Weibo2::Config.redirect_uri = "http://127.0.0.1:3000/weibo/callback"
+    Weibo2::Config.api_key = "1103608069"
+    Weibo2::Config.api_secret = "0696537464f5b61247411f8a32b60fe5"
+    Weibo2::Config.redirect_uri = "http://192.168.1.38:9530/weibo/callback"
 
   end
 end
