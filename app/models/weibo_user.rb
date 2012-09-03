@@ -50,11 +50,10 @@ class WeiboUser < ActiveRecord::Base
       :api_params => {:uid => self.weibo_user_id}.hash.to_s
     )
 
-    p  self.weibo_user_id
-    
     user_data = []
     users.map do |user|
       user_data << WeiboUser.create_by_api_hash(user)
+
       BilateralFriendship.create(
         :weibo_user_id => self.weibo_user_id, 
         :other_weibo_user_id => user['id']

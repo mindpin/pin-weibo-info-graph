@@ -1,4 +1,5 @@
 class BilateralFriendship < ActiveRecord::Base
+=begin
   belongs_to :weibo_user, 
              :class_name => 'WeiboUser', 
              :foreign_key => :weibo_user_id
@@ -10,6 +11,6 @@ class BilateralFriendship < ActiveRecord::Base
 
 
   validates :weibo_user_id, :other_weibo_user_id,  :presence => true
-  validates :weibo_user_id, :uniqueness => {:scope => :other_weibo_user_id}
-
+  validates_uniqueness_of :weibo_user_id, :scope => [:weibo_user_id, :other_weibo_user_id]
+=end
 end
