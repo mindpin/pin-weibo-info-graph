@@ -10,7 +10,14 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120809023621) do
+ActiveRecord::Schema.define(:version => 20120903055753) do
+
+  create_table "bilateral_friendships", :force => true do |t|
+    t.integer  "weibo_user_id"
+    t.integer  "other_weibo_user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "online_records", :force => true do |t|
     t.integer  "user_id"
@@ -51,6 +58,13 @@ ActiveRecord::Schema.define(:version => 20120809023621) do
     t.datetime "last_login_time"
     t.boolean  "send_invite_email"
     t.integer  "reputation",                :default => 0,  :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "weibo_api_caches", :force => true do |t|
+    t.string   "api_name"
+    t.string   "api_params"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

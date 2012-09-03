@@ -45,7 +45,24 @@ class WeiboUser < ActiveRecord::Base
     response = weibo_client.friendships.friends_bilateral(self.weibo_user_id).parsed
     users = response['users']
 
-    users.map {|user_info|WeiboUser.create_by_api_hash(user_info)}.compact
+    WeiboApiCache.create(
+      :api_name => 'friendships/friends/bilateral', 
+      :api_params => {:uid => self.weibo_user_id}.hash.to_s
+    )
+
+    p  self.weibo_user_id
+    
+    user_data = []
+    users.map do |user|
+      user_data << WeiboUser.create_by_api_hash(user)
+      BilateralFriendship.create(
+        :weibo_user_id => self.weibo_user_id, 
+        :other_weibo_user_id => user['id']
+      )
+    end
+    user_data.compact
+
+    # users.map {|user_info|WeiboUser.create_by_api_hash(user_info)}.compact
   end
 
   def refresh_statuses(client)
@@ -193,6 +210,9 @@ class WeiboUser < ActiveRecord::Base
 
     relations
   end
+
+
+
 
   # 用户 descriptions 分词，同时储存使用相应关键字对应的用户列表
   def combine_descriptions(users)
