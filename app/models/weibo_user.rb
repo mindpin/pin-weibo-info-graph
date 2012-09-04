@@ -46,32 +46,7 @@ class WeiboUser < ActiveRecord::Base
   end
 
   def friends_bilateral(weibo_client)
-    api_name = 'friendships/friends/bilateral'
-    api_params = {:uid => self.weibo_user_id}.hash.to_s
-
-
-    # 先判断在数据库是否有cache, 并且时间不超过 1 小时
-    bilateral_users = WeiboApiCache.get_bilateral_users(api_name, api_params)
-    if !bilateral_users.nil?
-      return bilateral_users
-    end
-    
-    # 再从 api 获取 
-    response = weibo_client.friendships.friends_bilateral(self.weibo_user_id).parsed
-    users = response['users']
-    
-    user_data = []
-    users.each do |user|
-      user_data << WeiboUser.create_by_api_hash(user)
-
-      BilateralFriendship.create(
-        :weibo_user_id => self.weibo_user_id, 
-        :other_weibo_user_id => user['id']
-      )
-    end
-    user_data.compact
-
-    # users.map {|user_info|WeiboUser.create_by_api_hash(user_info)}.compact
+    WeiboApiCache.bilateral(weibo_client, self)
   end
 
   def refresh_statuses(client)
