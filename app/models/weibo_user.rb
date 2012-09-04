@@ -51,33 +51,17 @@ class WeiboUser < ActiveRecord::Base
 
 
     # 先判断在数据库是否有cache, 并且时间不超过 1 小时
-    api_cache = WeiboApiCache.where(:api_name => api_name, :api_params => api_params)
-    if api_cache.exists? && (Time.now < api_cache.first.updated_at + 1.hour)
-      bilateral_users = WeiboApiCache.bilateral(self.weibo_user_id)
-      user_data = []
-      bilateral_users.each do |bilateral|
-        user_data << WeiboUser.find_by_weibo_user_id(bilateral.other_weibo_user_id)
-      end
-
-      return user_data
+    bilateral_users = WeiboApiCache.get_bilateral_users(api_name, api_params)
+    if !bilateral_users.nil?
+      return bilateral_users
     end
     
     # 再从 api 获取 
     response = weibo_client.friendships.friends_bilateral(self.weibo_user_id).parsed
     users = response['users']
-
-    if api_cache.exists?
-      api_cache.first.updated_at = Time.now
-      api_cache.first.save
-
-      # 清除已经存在的互相关注
-      BilateralFriendship.delete_all(:weibo_user_id => self.weibo_user_id)
-    else
-      WeiboApiCache.create(:api_name => api_name, :api_params => api_params)
-    end
     
     user_data = []
-    users.map do |user|
+    users.each do |user|
       user_data << WeiboUser.create_by_api_hash(user)
 
       BilateralFriendship.create(
