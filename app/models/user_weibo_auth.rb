@@ -96,7 +96,8 @@ class UserWeiboAuth < ActiveRecord::Base
         self.weibo_auth.destroy if !self.weibo_auth.blank?
 
         response = client.account.get_uid.parsed
-        user = client.users.show(response).parsed
+        # user = client.users.show(response).parsed
+        user = WeiboApiCache.show(client, response)
 
         UserWeiboAuth.create(
           :user => self, 
@@ -104,8 +105,8 @@ class UserWeiboAuth < ActiveRecord::Base
           :token => client.token.token, 
           :expires_in => client.token.expires_in,
           :weibo_user_id => response['uid'],
-          :screen_name => user['screen_name'],
-          :avatar => user['avatar_large']
+          :screen_name => user.screen_name,
+          :avatar => user.profile_image_url
         )
         WeiboUser.create_by_api_hash(user)
       end
