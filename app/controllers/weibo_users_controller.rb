@@ -52,25 +52,17 @@ class WeiboUsersController < ApplicationController
     @relations = current_user.weibo_auth.weibo_user.relation(client,@weibo_user)
   end
 
+  # 查看好友特征
   def feature
-    client = current_user.weibo_auth.weibo_client
-    screen_name = @weibo_user.screen_name
+    weibo_client = current_user.weibo_auth.weibo_client
 
-    # 关注用户
-    friends_data = []
-    friends = client.friendships.friends(:screen_name => screen_name).parsed
-    friends_data += friends['users']
-
-
+    # 我关注的人
+    friends_data = @weibo_user.get_friends_feature(weibo_client)
     @friends_description_data = WeiboUser.new.combine_descriptions(friends_data)
 
 
-    # 粉丝
-    followers_data = []
-    followers = client.friendships.followers(:screen_name => screen_name).parsed
-    followers_data += followers['users']
-
-    
+    # 关注我的人
+    followers_data = @weibo_user.get_followers_feature(weibo_client)
     @followers_description_data = WeiboUser.new.combine_descriptions(followers_data)
   end
 end

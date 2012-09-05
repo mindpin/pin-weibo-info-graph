@@ -21,10 +21,7 @@
     - unless @friends_description_data.nil?
       %ul
       - @friends_description_data['words'].each do |word|
-        %li= word[0]
-        %ul
-          - @friends_description_data['people'][word[0]].each do |user|
-            %li= user
+        %li= "#{word[0]} #{word[1]}"
 
 
 
@@ -33,7 +30,4 @@
     - unless @followers_description_data.nil?
       %ul
       - @followers_description_data['words'].each do |word|
-        %li= word[0]
-        %ul
-          - @followers_description_data['people'][word[0]].each do |user|
-            %li= user
+        %li= "#{word[0]} #{word[1]}"

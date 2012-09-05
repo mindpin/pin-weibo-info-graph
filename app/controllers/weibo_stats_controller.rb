@@ -40,55 +40,5 @@ class WeiboStatsController < ApplicationController
     end
   end
 
-  # 粉丝  关注用户列表
-  def stats13
-  end
-
-  def stats13_submit
-    client = current_user.weibo_auth.weibo_client
-    screen_name = params[:screen_name]
-
-    # 关注用户
-    friends_data = []
-    friends = client.friendships.friends(:screen_name => screen_name).parsed
-    friends_data += friends['users']
-
-    # friends = client.friendships.friends(:screen_name => screen_name).parsed
-    # friends_data += friends['users']
-
-    while true
-      friends = client.friendships.friends(:screen_name => screen_name).parsed
-      friends_data += friends['users']
-      if friends['next_cursor'] >=0
-        friends = client.friendships.friends(:screen_name => screen_name, :count => 50).parsed
-        friends_data += friends['users']
-      else
-        break
-      end
-    end
-    
-    @friends_description_data = WeiboUser.new.combine_descriptions(friends_data)
-
-
-    # 粉丝
-    followers_data = []
-    while true
-      followers = client.friendships.followers(:screen_name => screen_name).parsed
-      followers_data += followers['users']
-      if followers['next_cursor'] >=0
-        followers = client.friendships.followers(:screen_name => screen_name, :count => 50).parsed
-        followers_data += followers['users']
-      else
-        break
-      end
-    end
-
-    
-    @followers_description_data = WeiboUser.new.combine_descriptions(followers_data)
-
-
-    render :action => 'stats13'
-  end
-
 
 end

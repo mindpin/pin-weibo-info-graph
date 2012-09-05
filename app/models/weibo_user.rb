@@ -236,5 +236,44 @@ class WeiboUser < ActiveRecord::Base
   end
 
 
+  def get_friends_feature(weibo_client)
+    screen_name = self.screen_name
+
+    # 关注用户
+    friends_data = []
+    friends = weibo_client.friendships.friends(:screen_name => screen_name).parsed
+    friends_data += friends['users']
+
+    while true
+      if friends['next_cursor'] > 0
+        friends = weibo_client.friendships.friends(:screen_name => screen_name, :cursor => friends['next_cursor']).parsed
+        friends_data += friends['users']
+      else
+        break
+      end
+    end
+
+    friends_data
+  end
+
+  def get_followers_feature(weibo_client)
+    # 粉丝
+    followers_data = []
+    friends = weibo_client.friendships.followers(:screen_name => screen_name).parsed
+    followers_data += friends['users']
+
+    while true
+      if friends['next_cursor'] > 0
+        friends = weibo_client.friendships.followers(:screen_name => screen_name, :cursor => friends['next_cursor']).parsed
+        friends_data += friends['users']
+      else
+        break
+      end
+    end
+
+    followers_data
+  end
+
+
 
 end

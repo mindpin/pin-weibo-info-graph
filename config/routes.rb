@@ -66,10 +66,6 @@ PinWorkResultsShow::Application.routes.draw do
 
       # 统计分析：被评论趋势
       get :stats11
-
-      # 粉丝 微博用户关注的用户
-      get :stats13
-      post :stats13_submit
     end
   end
   # end of stats
