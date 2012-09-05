@@ -244,7 +244,7 @@ class WeiboUser < ActiveRecord::Base
     while true
       if friends['next_cursor'] > 0
         friends = weibo_client.friendships.friends(:screen_name => screen_name, :cursor => friends['next_cursor']).parsed
-        friend_weibo_users = friends['users'].map {|user| self.class.create_by_api_hash(user)}
+        friend_weibo_users += friends['users'].map {|user| self.class.create_by_api_hash(user)}
       else
         break
       end
@@ -255,7 +255,7 @@ class WeiboUser < ActiveRecord::Base
 
   def get_followers(weibo_client)
     screen_name = self.screen_name
-    
+
     # 粉丝
     follower_weibo_users = []
     followers = weibo_client.friendships.followers(:screen_name => screen_name).parsed
@@ -264,7 +264,7 @@ class WeiboUser < ActiveRecord::Base
     while true
       if followers['next_cursor'] > 0
         followers = weibo_client.friendships.followers(:screen_name => screen_name, :cursor => friends['next_cursor']).parsed
-        follower_weibo_users = followers['users'].map {|user| self.class.create_by_api_hash(user)}
+        follower_weibo_users += followers['users'].map {|user| self.class.create_by_api_hash(user)}
       else
         break
       end
