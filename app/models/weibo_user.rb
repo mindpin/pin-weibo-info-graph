@@ -14,6 +14,7 @@ class WeiboUser < ActiveRecord::Base
 
   validates :weibo_user_id, :uniqueness => true
 
+
   def self.create_by_api_hash(user)
     return if user.blank?
     weibo_user = WeiboUser.find_by_weibo_user_id(user['id'])
@@ -33,6 +34,8 @@ class WeiboUser < ActiveRecord::Base
     end
     weibo_user
   end
+
+
 
   def self.search(client,query)
     response = client.search.suggestions_users(query).body

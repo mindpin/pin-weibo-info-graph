@@ -1,0 +1,39 @@
+- hbreadcrumb '首页', '/'
+- hbreadcrumb "微博用户：#{@weibo_user.screen_name}", '#'
+
+#left-weibo-box
+  =render 'weibo/parts/current_user_weibo_profile'
+
+#right-weibo-box
+  =render 'weibo/parts/navigation', :weibo_user_id => @weibo_user.weibo_user_id
+  =render 'weibo_users/parts/search_users'
+
+  .field
+    .avatar= link_to(image_tag(@weibo_user['profile_image_url']), "/weibo_users/#{@weibo_user['weibo_user_id']}")
+    .name= link_to @weibo_user['screen_name'], "/weibo_users/#{@weibo_user['weibo_user_id']}"
+
+    .relation= link_to "查看和我的关系", "/weibo_users/#{@weibo_user['weibo_user_id']}/relation"
+    .feature= link_to "查看好友特征", "/weibo_users/#{@weibo_user['screen_name']}/feature"
+  
+  
+  .page-friends-keywords
+    .title= "关注用户关键字"
+    - unless @friends_description_data.nil?
+      %ul
+      - @friends_description_data['words'].each do |word|
+        %li= word[0]
+        %ul
+          - @friends_description_data['people'][word[0]].each do |user|
+            %li= user
+
+
+
+  .page-followers-keywords
+    .title= "粉丝关键字"
+    - unless @followers_description_data.nil?
+      %ul
+      - @followers_description_data['words'].each do |word|
+        %li= word[0]
+        %ul
+          - @followers_description_data['people'][word[0]].each do |user|
+            %li= user

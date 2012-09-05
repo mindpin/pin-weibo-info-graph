@@ -108,7 +108,6 @@ class UserWeiboAuth < ActiveRecord::Base
           :screen_name => user.screen_name,
           :avatar => user.profile_image_url
         )
-        WeiboUser.create_by_api_hash(user)
       end
       # end set_new_weibo_auth
 

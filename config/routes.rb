@@ -21,6 +21,7 @@ PinWorkResultsShow::Application.routes.draw do
       get :word_stats
       get :refresh_statuses
       get :relation
+      get :feature
     end
 
     collection do
