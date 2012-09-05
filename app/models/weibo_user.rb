@@ -254,6 +254,8 @@ class WeiboUser < ActiveRecord::Base
   end
 
   def get_followers(weibo_client)
+    screen_name = self.screen_name
+    
     # 粉丝
     follower_weibo_users = []
     followers = weibo_client.friendships.followers(:screen_name => screen_name).parsed
