@@ -237,7 +237,6 @@ class WeiboUser < ActiveRecord::Base
     screen_name = self.screen_name
 
     # 关注用户
-    friend_weibo_users = []
     friends = weibo_client.friendships.friends(:screen_name => screen_name).parsed
     friend_weibo_users = friends['users'].map {|user| self.class.create_by_api_hash(user)}
 
@@ -257,7 +256,6 @@ class WeiboUser < ActiveRecord::Base
     screen_name = self.screen_name
 
     # 粉丝
-    follower_weibo_users = []
     followers = weibo_client.friendships.followers(:screen_name => screen_name).parsed
     follower_weibo_users = followers['users'].map {|user| self.class.create_by_api_hash(user)}
 
