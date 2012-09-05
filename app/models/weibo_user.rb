@@ -209,7 +209,7 @@ class WeiboUser < ActiveRecord::Base
 
     users.each do |user|
 
-      algor = RMMSeg::Algorithm.new(_prepate_text(user['description']))
+      algor = RMMSeg::Algorithm.new(_prepate_text(user.description))
     
       loop do
         tok = algor.next_token
@@ -218,11 +218,8 @@ class WeiboUser < ActiveRecord::Base
         word = tok.text
         if !STOP_WORDS.include?(word) && word.split(//u).length > 1
           words[word] = words[word] + 1
-          (people[word] ||= []) << user['screen_name']
-          people[word] = people[word].uniq
-
-          # 储存用户
-          self.class.create_by_api_hash(user)
+          (people[word] ||= []) << user.screen_name
+          people[word] = people[word].uniq          
         end
 
 
@@ -236,42 +233,42 @@ class WeiboUser < ActiveRecord::Base
   end
 
 
-  def get_friends_feature(weibo_client)
+  def get_friends(weibo_client)
     screen_name = self.screen_name
 
     # 关注用户
-    friends_data = []
+    friend_weibo_users = []
     friends = weibo_client.friendships.friends(:screen_name => screen_name).parsed
-    friends_data += friends['users']
+    friend_weibo_users = friends['users'].map {|user| self.class.create_by_api_hash(user)}
 
     while true
       if friends['next_cursor'] > 0
         friends = weibo_client.friendships.friends(:screen_name => screen_name, :cursor => friends['next_cursor']).parsed
-        friends_data += friends['users']
+        friend_weibo_users = friends['users'].map {|user| self.class.create_by_api_hash(user)}
       else
         break
       end
     end
 
-    friends_data
+    friend_weibo_users
   end
 
-  def get_followers_feature(weibo_client)
+  def get_followers(weibo_client)
     # 粉丝
-    followers_data = []
-    friends = weibo_client.friendships.followers(:screen_name => screen_name).parsed
-    followers_data += friends['users']
+    follower_weibo_users = []
+    followers = weibo_client.friendships.followers(:screen_name => screen_name).parsed
+    follower_weibo_users = followers['users'].map {|user| self.class.create_by_api_hash(user)}
 
     while true
-      if friends['next_cursor'] > 0
-        friends = weibo_client.friendships.followers(:screen_name => screen_name, :cursor => friends['next_cursor']).parsed
-        friends_data += friends['users']
+      if followers['next_cursor'] > 0
+        followers = weibo_client.friendships.followers(:screen_name => screen_name, :cursor => friends['next_cursor']).parsed
+        follower_weibo_users = followers['users'].map {|user| self.class.create_by_api_hash(user)}
       else
         break
       end
     end
 
-    followers_data
+    follower_weibo_users
   end
 
 

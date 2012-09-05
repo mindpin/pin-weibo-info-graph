@@ -18,7 +18,7 @@
   
   .page-friends-keywords
     .title= "关注用户关键字"
-    - unless @friends_description_data.nil?
+    - if !@friends_description_data.nil?
       %ul
       - @friends_description_data['words'].each do |word|
         %li= "#{word[0]} #{word[1]}"
@@ -27,7 +27,7 @@
 
   .page-followers-keywords
     .title= "粉丝关键字"
-    - unless @followers_description_data.nil?
+    - if !@followers.nil?
       %ul
-      - @followers_description_data['words'].each do |word|
-        %li= "#{word[0]} #{word[1]}"
+      - @followers.each do |follower|
+        %li= follower.screen_name
