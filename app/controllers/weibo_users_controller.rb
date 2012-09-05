@@ -62,43 +62,14 @@ class WeiboUsersController < ApplicationController
     friends_data += friends['users']
 
 
-    friends = client.friendships.friends(:screen_name => screen_name, :count => 50).parsed
-    friends_data += friends['users']
-
-=begin
-    while true
-      friends = client.friendships.friends(:screen_name => screen_name).parsed
-      friends_data += friends['users']
-      if friends['next_cursor'] >=0
-        friends = client.friendships.friends(:screen_name => screen_name, :count => 50).parsed
-        friends_data += friends['users']
-      else
-        break
-      end
-    end
-=end
-
     @friends_description_data = WeiboUser.new.combine_descriptions(friends_data)
 
 
     # 粉丝
     followers_data = []
-
-    followers = client.friendships.followers(:screen_name => screen_name, :count => 50).parsed
+    followers = client.friendships.followers(:screen_name => screen_name).parsed
     followers_data += followers['users']
 
-=begin
-    while true
-      followers = client.friendships.followers(:screen_name => screen_name).parsed
-      followers_data += followers['users']
-      if followers['next_cursor'] >=0
-        followers = client.friendships.followers(:screen_name => screen_name, :count => 50).parsed
-        followers_data += followers['users']
-      else
-        break
-      end
-    end
-=end
     
     @followers_description_data = WeiboUser.new.combine_descriptions(followers_data)
   end

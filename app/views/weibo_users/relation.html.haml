@@ -12,6 +12,7 @@
     .name= link_to @weibo_user['screen_name'], "/weibo_users/#{@weibo_user['weibo_user_id']}"
 
     .relation= link_to "查看和我的关系", "/weibo_users/#{@weibo_user['weibo_user_id']}/relation"
+    .feature= link_to "查看好友特征", "/weibo_users/#{@weibo_user['weibo_user_id']}/feature"
   
   .page-relations
     - if @relations.blank?
