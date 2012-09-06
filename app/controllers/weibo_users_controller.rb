@@ -57,8 +57,10 @@ class WeiboUsersController < ApplicationController
     weibo_client = current_user.weibo_auth.weibo_client
 
     # 我关注的人
-    friends = @weibo_user.get_friends(weibo_client)
+    # friends = @weibo_user.get_friends(weibo_client)
+    friends = WeiboApiCache.friends(weibo_client, @weibo_user) 
     @friends_description_data = WeiboUser.new.combine_descriptions(friends)
+
 
     # 关注我的人
     @followers = @weibo_user.get_followers(weibo_client)

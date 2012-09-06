@@ -31,4 +31,11 @@ class WeiboApiCache < ActiveRecord::Base
     
   end
 
+
+  def self.friends(weibo_client, weibo_user)
+    cache = FriendsCache.new(weibo_client, weibo_user)
+    cache.friends
+    cache.friend_weibo_users
+  end
+
 end

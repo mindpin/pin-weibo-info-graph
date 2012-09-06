@@ -10,9 +10,16 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120903055753) do
+ActiveRecord::Schema.define(:version => 20120906010627) do
 
   create_table "bilateral_friendships", :force => true do |t|
+    t.integer  "weibo_user_id",       :limit => 8
+    t.integer  "other_weibo_user_id", :limit => 8
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "friends", :force => true do |t|
     t.integer  "weibo_user_id",       :limit => 8
     t.integer  "other_weibo_user_id", :limit => 8
     t.datetime "created_at"
