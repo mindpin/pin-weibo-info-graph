@@ -34,6 +34,16 @@ class BilateralCache
     response = @weibo_client.friendships.friends_bilateral(@weibo_user.weibo_user_id).parsed
     users = response['users']
 
+    users_count = users.count
+    next_page = 2
+    while users_count < response['total_number']
+      response = @weibo_client.friendships.friends_bilateral(:uid => @weibo_user.weibo_user_id, :page => next_page).parsed
+      users += response['users']
+
+      users_count += users.count
+      next_page += 1
+    end
+
     users.map {|user_info|WeiboUser.create_by_api_hash(user_info)}.compact
   end
 
