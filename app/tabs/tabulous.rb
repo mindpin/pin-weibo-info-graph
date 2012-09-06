@@ -54,17 +54,17 @@ Tabulous.setup do |config|
 
   config.tabs do
     [
-      #-----------------------------------------------------------------------------------------------------------------------------------------------------------#
-      #    TAB NAME               |    DISPLAY TEXT        |    PATH                                                            |    VISIBLE?    |    ENABLED?    #
-      #-----------------------------------------------------------------------------------------------------------------------------------------------------------#
-      [    :my_weibo_tab          ,    '我的微博'             ,    "/weibo_users/#{current_user.weibo_auth.weibo_user_id}"   ,    true        ,    true        ],
-      [    :my_friends_tab        ,    '我的朋友'             ,    "/weibo_users/friends"  ,    true        ,    true        ],
-      [    :weibo_comments_tab    ,    '我的评论'             ,    "/weibo_comments/to_me"   ,    true        ,    true        ],
-      [    :received_comments_subtab ,    '我收到的评论'       ,    "/weibo_comments/to_me"         ,    true        ,    true        ],
-      [    :sent_comments_subtab ,    '我发出的评论'       ,    "/weibo_comments/by_me"         ,    true        ,    true        ],
-      #-----------------------------------------------------------------------------------------------------------------------------------------------------------#
-      #    TAB NAME               |    DISPLAY TEXT        |    PATH                                                            |    VISIBLE?    |    ENABLED?    #
-      #-----------------------------------------------------------------------------------------------------------------------------------------------------------#
+      #----------------------------------------------------------------------------------------------------------------------------------------------------------------#
+      #    TAB NAME                     |    DISPLAY TEXT            |    PATH                                                       |    VISIBLE?    |    ENABLED?    #
+      #----------------------------------------------------------------------------------------------------------------------------------------------------------------#
+      [    :my_weibo_tab                ,    '我的微博'          ,    "/weibo_users/#{current_user.weibo_auth.weibo_user_id}"    ,    true        ,    true        ],
+      [    :my_friends_tab              ,    '我的朋友'          ,    "/weibo_users/friends"                                     ,    true        ,    true        ],
+      [    :weibo_comments_tab          ,    '我的评论'          ,    "/weibo_comments/to_me"                                    ,    true        ,    true        ],
+      [    :received_comments_subtab    ,    '我收到的评论'    ,    "/weibo_comments/to_me"                                    ,    true        ,    true        ],
+      [    :sent_comments_subtab        ,    '我发出的评论'    ,    "/weibo_comments/by_me"                                    ,    true        ,    true        ],
+      #----------------------------------------------------------------------------------------------------------------------------------------------------------------#
+      #    TAB NAME                     |    DISPLAY TEXT            |    PATH                                                       |    VISIBLE?    |    ENABLED?    #
+      #----------------------------------------------------------------------------------------------------------------------------------------------------------------#
     ]
   end
 
@@ -84,17 +84,17 @@ Tabulous.setup do |config|
 
   config.actions do
     [
-      #------------------------------------------------------------------------#
-      #    CONTROLLER         |    ACTION          |    TAB                    #
-      #------------------------------------------------------------------------#
-      [    :weibo_users       ,    :show    ,    :my_weibo_tab          ],
-      [    :weibo_users       ,    :friends    ,    :my_friends_tab        ],
-      [    :weibo_comments    ,    :all_actions    ,    :weibo_comments_tab    ],
+      #------------------------------------------------------------------------------#
+      #    CONTROLLER         |    ACTION          |    TAB                          #
+      #------------------------------------------------------------------------------#
+      [    :weibo_users       ,    :show           ,    :my_weibo_tab                ],
+      [    :weibo_users       ,    :friends        ,    :my_friends_tab              ],
+      [    :weibo_comments    ,    :all_actions    ,    :weibo_comments_tab          ],
       [    :weibo_comments    ,    :all_actions    ,    :received_comments_subtab    ],
-      [    :weibo_comments    ,    :all_actions    ,    :sent_comments_subtab    ],
-      #------------------------------------------------------------------------#
-      #    CONTROLLER         |    ACTION          |    TAB                    #
-      #------------------------------------------------------------------------#
+      [    :weibo_comments    ,    :all_actions    ,    :sent_comments_subtab        ],
+      #------------------------------------------------------------------------------#
+      #    CONTROLLER         |    ACTION          |    TAB                          #
+      #------------------------------------------------------------------------------#
     ]
   end
 
