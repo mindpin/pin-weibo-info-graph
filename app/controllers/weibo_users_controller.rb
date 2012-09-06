@@ -63,7 +63,7 @@ class WeiboUsersController < ApplicationController
 
 
     # 关注我的人
-    @followers = @weibo_user.get_followers(weibo_client)
+    # @followers = @weibo_user.get_followers(weibo_client)
     # @followers_description_data = WeiboUser.new.combine_descriptions(followers)
   end
 end
