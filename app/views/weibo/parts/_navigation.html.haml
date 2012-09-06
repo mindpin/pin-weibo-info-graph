@@ -1,4 +1,6 @@
 .navigation
-  = link_to "我的微博", "/weibo_users/#{current_user.weibo_auth.weibo_user_id}"
-  = link_to "我的朋友", "/weibo_users/friends"
-  = link_to "我的评论", "/weibo_comments/to_me"
+  = tabs
+  = subtabs
+  = #link_to "我的微博", "/weibo_users/#{current_user.weibo_auth.weibo_user_id}"
+  = #link_to "我的朋友", "/weibo_users/friends"
+  = #link_to "我的评论", "/weibo_comments/to_me"

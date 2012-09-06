@@ -15,6 +15,8 @@ gem 'uuidtools', :require => 'uuidtools'
 gem 'weibo2'
 gem 'will_paginate', '~> 3.0'
 
+gem 'tabulous'
+
 group :assets do
   gem 'sass-rails',   '~> 3.1.4'
   gem 'coffee-rails', '~> 3.1.1'
