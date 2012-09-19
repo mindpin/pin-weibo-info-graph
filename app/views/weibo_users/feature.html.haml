@@ -1,6 +1,7 @@
 - hbreadcrumb '首页', '/'
 - hbreadcrumb "微博用户：#{@weibo_user.screen_name}", '#'
 
+
 #left-weibo-box
   =render 'weibo/parts/current_user_weibo_profile'
 
@@ -16,18 +17,23 @@
     .feature= link_to "查看好友特征", "/weibo_users/#{@weibo_user['weibo_user_id']}/feature"
   
   
+
   .page-friends-keywords
     .title= "关注用户关键字"
     - if !@friends_description_data.nil?
-      %ul
-      - @friends_description_data['words'].each do |word|
-        %li= "#{word[0]} #{word[1]}"
+      .items
+        - @friends_description_data['words'].each do |word|
+          .item
+            .t= "#{word[0]}"
+            .line
+              .r= "#{word[1]}"
 
 
 
   .page-followers-keywords
-    .title= "粉丝关键字"
+    
     - if !@followers.nil?
+      .title= "粉丝关键字"
       %ul
       - @followers.each do |follower|
         %li= follower.screen_name

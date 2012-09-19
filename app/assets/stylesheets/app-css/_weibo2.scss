@@ -8,3 +8,27 @@
   float:left;
   width: 900px;
 }
+
+.page-friends-keywords {
+  .items .item{
+    float: left; width: 800px;
+  }
+}
+
+
+.page-friends-keywords {
+  .items .item .t {
+    float: left; width: 100px;
+  }
+
+  .items .item .line {
+    float: left;
+    height: 20px;
+    padding-right: 3px;
+    margin-right: 10px;
+    margin-top: 6px;
+    text-align: right;
+    width: 50px;
+    background-color: #333;
+  }
+}
