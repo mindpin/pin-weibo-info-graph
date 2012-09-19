@@ -61,6 +61,9 @@ class WeiboUsersController < ApplicationController
     friends = WeiboApiCache.friends(weibo_client, @weibo_user) 
     @friends_description_data = WeiboUser.new.combine_descriptions(friends)
 
+    @friends_words_total = 0
+    @friends_description_data['words'].each {|word| @friends_words_total += word[1]}
+
 
     # 关注我的人
     # @followers = @weibo_user.get_followers(weibo_client)

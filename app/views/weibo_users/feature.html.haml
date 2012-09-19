@@ -23,9 +23,13 @@
     - if !@friends_description_data.nil?
       .items
         - @friends_description_data['words'].each do |word|
+          :ruby
+            n = word[1].to_f / @friends_words_total
+            percent = number_to_percentage(n * 1000, :precision => 1)
+
           .item
             .t= "#{word[0]}"
-            .line
+            .line{:style=>"width:#{percent};"}
               .r= "#{word[1]}"
 
 
