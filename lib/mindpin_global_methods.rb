@@ -34,3 +34,25 @@ def truncate_u(_text, length = 30, truncate_string = '...')
 
   return text
 end
+
+
+def loop_to_request_weibo_api(count)
+  result = []
+
+  current_page = 1
+  while true do
+    single_result = yield current_page
+    break if single_result.blank?
+
+    if single_result.count + result.count < count
+      result += single_result
+      current_page += 1
+    else
+      index = count - result.count
+      result += single_result[0...index]
+      break
+    end
+  end
+
+  result
+end

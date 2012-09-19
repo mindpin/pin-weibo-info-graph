@@ -1,0 +1,4 @@
+- hbreadcrumb '首页', '#'
+
+.page-weibo-register    
+  = link_to "使用微博登录", Weibo2::Client.new.auth_code.authorize_url(:response_type => "code")

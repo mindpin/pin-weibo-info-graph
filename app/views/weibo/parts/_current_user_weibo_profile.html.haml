@@ -1,0 +1,11 @@
+.head
+  :ruby
+    current_user_weibo = current_user.weibo_auth.weibo_user
+    weibo_user_info = JSON.parse current_user_weibo.json
+    weibo_user_location = weibo_user_info['location']
+    weibo_user_desc = weibo_user_info['description']
+
+  .avatar= image_tag(current_user_weibo.profile_image_url)
+  .name= current_user_weibo.screen_name
+  .location= weibo_user_location
+  .desc= weibo_user_desc

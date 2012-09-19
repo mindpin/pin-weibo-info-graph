@@ -1,0 +1,24 @@
+- hbreadcrumb '首页', '#'
+
+
+#left-weibo-box
+  =render 'weibo/parts/current_user_weibo_profile'
+
+#right-weibo-box
+  =render 'weibo/parts/navigation'
+
+  .field
+    .avatar= link_to(image_tag(@weibo_user['profile_image_url']), "/weibo_users/#{@weibo_user['weibo_user_id']}")
+    .name= link_to @weibo_user['screen_name'], "/weibo_users/#{@weibo_user['weibo_user_id']}"
+
+    .relation= link_to "查看和我的关系", "/weibo_users/#{@weibo_user['weibo_user_id']}/relation"
+    .feature= link_to "查看好友特征", "/weibo_users/#{@weibo_user['weibo_user_id']}/feature"
+  
+  .page-relations
+    - if @relations.blank?
+      = '联系人超过三层'
+    - else
+      - @relations.each do |relation|
+        .relation
+          - relation.each do |weibo_user|
+            = image_tag(weibo_user['profile_image_url'])

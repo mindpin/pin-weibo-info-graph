@@ -7,70 +7,30 @@ class WeiboComment < ActiveRecord::Base
              :class_name => 'WeiboStatus', 
              :foreign_key => :weibo_status_id, :primary_key => :weibo_status_id
   
-  validates_uniqueness_of :weibo_comment_id
+  validates :weibo_comment_id, :uniqueness => true
 
+  validates :weibo_comment_id, 
+            :text, :weibo_user_id, 
+            :weibo_status_id, :weibo_created_at, :json, :to_weibo_user_id,  :presence => true
 
-  def self.update_by_weibo_status_id(client_user, weibo_status_id)
-    if weibo_status_id.nil?
-      return
-    end
+  def self.create_by_api_hash(comment)
+    return if comment.blank?
+    return if !WeiboComment.find_by_weibo_comment_id(comment['idstr']).blank?
 
-    client = client_user.get_weibo_client
-    response = client.comments.show(weibo_status_id).parsed
-    comments = response['comments']
+    weibo_created_at = Date.parse(comment['created_at']) unless comment['created_at'].blank?
 
-    unless comments.nil?
-      WeiboComment.destroy_all(:weibo_status_id => weibo_status_id)
-      save_comments(comments)
-    end
+    WeiboComment.create(
+      :weibo_comment_id => comment['idstr'],
+      :text => comment['text'],
+      :weibo_user_id => comment['user']['idstr'],
+      :weibo_status_id => comment['status']['idstr'],
+      :weibo_created_at => weibo_created_at,
+      :json => comment.to_json,
+      :to_weibo_user_id => comment['status']['user']['id']
+    )
 
+    WeiboStatus.create_by_api_hash(comment['status'])
+    WeiboUser.create_by_api_hash(comment['user'])
   end
-  # end of update_by_weibo_status_id
-
-
-  def self.get_my_comments_by_count(client_user, count)
-    client = client_user.get_weibo_client
-
-    current_page = 1
-    if count <= 20
-      response = client.comments.by_me(:page => current_page, :count => count).parsed
-      comments = response['comments']
-    else
-      comments = []
-      while true do
-        response = client.comments.by_me(:page => current_page, :count => 20).parsed
-        if comments.count + response['comments'].count < count
-          comments = comments + response['comments']
-          current_page += 1
-        else
-          index = count - comments.count
-          comments += response['comments'][0...index]
-          break
-        end
-      end
-    end
-
-    comments
-  end
-  # end of get_my_comments_by_count
-
-
-  def self.save_comments(comments)
-    unless comments.nil?
-      comments.each do |comment|
-
-        WeiboComment.create(
-          :weibo_comment_id => comment['idstr'],
-          :text => comment['text'],
-          :weibo_user_id => comment['user']['idstr'],
-          :weibo_status_id => comment['status']['idstr']
-        )
-
-        WeiboStatus.save_new(comment['status'])
-      end
-    end
-  end
-  # end of save_comments
-
 
 end

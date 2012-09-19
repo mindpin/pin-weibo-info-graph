@@ -1,0 +1,33 @@
+- hbreadcrumb '首页', '/'
+- hbreadcrumb "统计分析: 评论转发趋势", '#'
+
+.page-weibo-retweeted
+  - unless @retweeted_statuses.nil?
+    = "转发微博条数为 #{@retweeted_statuses.length}"
+
+
+.page-weibo-interactive-users
+  :ruby
+    weibo_users = users_by_my_comments_and_retweeted(@group_comments, @group_retweeted)
+  
+  %ul
+  - if weibo_users.blank?
+    %li= "数据库暂时还没有相关的评论记录，请先采集"
+
+  - else
+    - weibo_users.each do |year, week_users|
+      %li
+        %label= year
+        = # debug users
+        = # debug users[year]
+
+        %ul
+        - week_users.each do |week_number, users|
+          %li= week_dates(year,  week_number)
+
+          %ul
+          - users.each do |user, count|
+            - screen_name = WeiboUser.find_by_weibo_user_id(user).screen_name
+            %li= "#{screen_name}, #{count}"
+
+

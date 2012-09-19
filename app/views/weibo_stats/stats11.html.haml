@@ -1,0 +1,29 @@
+- hbreadcrumb '首页', '/'
+- hbreadcrumb "统计分析: 被评论趋势", '#'
+
+
+.page-weibo-interactive-users
+  :ruby
+    weibo_users = users_by_received_comments(@group_comments)
+  
+  %ul
+  - if weibo_users.blank?
+    %li= "您还不是微博用户"
+
+  - else
+    - weibo_users.each do |year, week_users|
+      %li
+        %label= year
+        = # debug users
+        = # debug users[year]
+
+        %ul
+        - week_users.each do |week_number, users|
+          %li= week_dates(year,  week_number)
+
+          %ul
+          - users.each do |user, count|
+            - screen_name = WeiboUser.find_by_weibo_user_id(user).screen_name
+            %li= "#{screen_name}, #{count}"
+
+

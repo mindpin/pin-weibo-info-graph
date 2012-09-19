@@ -1,0 +1,11 @@
+- hbreadcrumb '首页', '#'
+
+
+#left-weibo-box
+  =render 'weibo/parts/current_user_weibo_profile'
+
+#right-weibo-box
+  =render 'weibo/parts/navigation'
+
+  =render 'weibo_users/parts/weibo_user_list', :weibo_users => @weibo_users
+  

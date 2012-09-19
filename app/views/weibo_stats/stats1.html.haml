@@ -1,0 +1,25 @@
+- hbreadcrumb '首页', '/'
+- hbreadcrumb "统计分析: 评论转发趋势", '#'
+
+.page-weibo-statuses-stats
+  %ul
+  - unless @group_words.nil?
+    - @group_words.each do |year, week_words|
+      %li
+        %label= year
+        = # debug week_words
+
+        - week_words.each do |week_number, words|
+          %li= week_dates(year,  week_number)
+          %ul
+          :ruby
+            words = words.sort {|a1, a2| a2[1].to_i <=> a1[1].to_i }
+            words = words[0..9]
+            
+          - words.each do |word, count|
+            %li= "#{word}, #{count}"
+
+
+
+      
+

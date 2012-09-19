@@ -1,22 +1,22 @@
 - hbreadcrumb '首页', '/'
-- hbreadcrumb "获取评论数据", '#'
-
-.page-weibo-comments-query
-  = form_tag '/weibo_comments', :method => 'get' do
-    .field
-      %label= "用户名"
-      = text_field_tag 'screen_name', @screen_name
-
-    .field.submit
-      %a.form-submit-button{:href=>'javascript:;'} 同步
-
-.page-weibo-comments
-  %ul
-    - unless @comments.nil?
-      - @comments.each do |comment|
-        %li
-          .field= comment.text
-          .field= comment.weibo_status.text
+- hbreadcrumb "微博用户：#{@weibo_user.screen_name}", "/weibo_users/#{@weibo_user.weibo_user_id}"
+- hbreadcrumb "##{@weibo_status.weibo_status_id} 评论数据", '#'
 
 
+#left-weibo-box
+  =render 'weibo/parts/current_user_weibo_profile'
 
+#right-weibo-box
+  =render 'weibo/parts/navigation'
+  
+  .page-weibo-comments
+    .refresh
+      = link_to '刷新评论数据', "/weibo_statuses/#{@weibo_status.weibo_status_id}/weibo_comments/refresh", :method=>'post'
+
+    - if !@weibo_comments.blank?
+      .comments
+        - @weibo_comments.each do |comment|
+          .comment
+            .text= comment.text
+    - else
+      本地没有任何评论数据

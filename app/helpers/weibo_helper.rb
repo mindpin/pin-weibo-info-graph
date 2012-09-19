@@ -38,7 +38,7 @@ module WeiboHelper
       unless weibo.retweeted_status_id.nil?
         
         retweeted_status = WeiboStatus.find_by_weibo_status_id(weibo.retweeted_status_id)
-        unless retweeted_status.thumbnail_pic.blank?
+        unless !retweeted_status.nil? && retweeted_status.thumbnail_pic.blank?
           count = count + 1
         end
       end
@@ -55,9 +55,14 @@ module WeiboHelper
     weibo_statuses.each do |weibo|
       unless weibo.retweeted_status_id.nil?
         retweeted_status = WeiboStatus.find_by_weibo_status_id(weibo.retweeted_status_id)
-        user = WeiboUser.find_by_weibo_user_id(retweeted_status.weibo_user_id)
-        unless user.nil?
-          users << user
+
+        begin
+          user = WeiboUser.find_by_weibo_user_id(retweeted_status.weibo_user_id)
+          unless user.nil?
+            users << user
+          end
+        rescue
+          p weibo.retweeted_status_id
         end
       end
     end

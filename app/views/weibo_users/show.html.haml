@@ -1,14 +1,34 @@
 - hbreadcrumb '首页', '/'
 - hbreadcrumb "微博用户：#{@weibo_user.screen_name}", '#'
 
-.page-weibo-user-show{:'data-weibo-user-id'=>@weibo_user.weibo_user_id}
-  .to-comment
+#left-weibo-box
+  =render 'weibo/parts/current_user_weibo_profile'
 
-  - if !@weibo_statuses.blank?
-    .weibo-statuses
-      - @weibo_statuses.each do |weibo|
-        .weibo-status
-          .text= weibo.text
-          .see-comment= link_to '查看评论', "/weibo_comments/#{weibo.weibo_status_id}"
+#right-weibo-box
+  =render 'weibo/parts/navigation', :weibo_user_id => @weibo_user.weibo_user_id
+  =render 'weibo_users/parts/search_users'
 
-.page-paginate= will_paginate @weibo_statuses
+  .field
+    .avatar= link_to(image_tag(@weibo_user['profile_image_url']), "/weibo_users/#{@weibo_user['weibo_user_id']}")
+    .name= link_to @weibo_user['screen_name'], "/weibo_users/#{@weibo_user['weibo_user_id']}"
+
+    .relation= link_to "查看和我的关系", "/weibo_users/#{@weibo_user['weibo_user_id']}/relation"
+    .relation= link_to "查看好友特征", "/weibo_users/#{@weibo_user['weibo_user_id']}/feature"
+  
+  .field.submit
+    %a.form-submit-button{:href=>"/weibo_users/#{@weibo_user.weibo_user_id}/refresh_statuses"} 刷新
+  
+  .page-weibo-user-show{:'data-weibo-user-id'=>@weibo_user.weibo_user_id}
+    .to-comment
+
+    - if !@weibo_statuses.blank?
+      .weibo-statuses
+        - @weibo_statuses.each do |weibo|
+          .weibo-status
+            .text= weibo.text
+            .see-comment= link_to '查看评论', "/weibo_statuses/#{weibo.weibo_status_id}/weibo_comments"
+
+  .page-paginate= # will_paginate @weibo_statuses
+
+
+

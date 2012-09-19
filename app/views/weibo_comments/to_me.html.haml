@@ -1,6 +1,5 @@
 - hbreadcrumb '首页', '/'
-- hbreadcrumb "我发出的评论", '#'
-
+- hbreadcrumb "我收到的评论", '#'
 
 
 #left-weibo-box
@@ -10,14 +9,14 @@
   =render 'weibo/parts/navigation'
 
   =render 'weibo/parts/comments_menu'
-
-  = link_to '刷新','/weibo_comments/refresh_by_me',:method => 'post'
+  
+  = link_to '刷新','/weibo_comments/refresh_to_me',:method => 'post'
 
   .page-weibo-comments
-    - if !@my_comments.blank?
+    - if !@received_comments.blank?
       .comments
-        - @my_comments.each do |comment|
+        - @received_comments.each do |comment|
           .comment
             .text= comment.text
     - else
-      本地没有我的评论数据
+      本地没有我收到的评论数据

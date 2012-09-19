@@ -10,7 +10,21 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120801083534) do
+ActiveRecord::Schema.define(:version => 20120906010627) do
+
+  create_table "bilateral_friendships", :force => true do |t|
+    t.integer  "weibo_user_id",       :limit => 8
+    t.integer  "other_weibo_user_id", :limit => 8
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "friends", :force => true do |t|
+    t.integer  "weibo_user_id",       :limit => 8
+    t.integer  "other_weibo_user_id", :limit => 8
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "online_records", :force => true do |t|
     t.integer  "user_id"
@@ -55,6 +69,13 @@ ActiveRecord::Schema.define(:version => 20120801083534) do
     t.datetime "updated_at"
   end
 
+  create_table "weibo_api_caches", :force => true do |t|
+    t.string   "api_name"
+    t.string   "api_params"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "weibo_comments", :force => true do |t|
     t.integer  "weibo_comment_id", :limit => 8
     t.string   "text"
@@ -62,6 +83,9 @@ ActiveRecord::Schema.define(:version => 20120801083534) do
     t.integer  "weibo_status_id",  :limit => 8
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.date     "weibo_created_at"
+    t.text     "json"
+    t.integer  "to_weibo_user_id", :limit => 8
   end
 
   create_table "weibo_statuses", :force => true do |t|
@@ -75,6 +99,7 @@ ActiveRecord::Schema.define(:version => 20120801083534) do
     t.text     "json"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.date     "weibo_created_at"
   end
 
   add_index "weibo_statuses", ["weibo_status_id"], :name => "index_weibo_statuses_on_weibo_status_id"
