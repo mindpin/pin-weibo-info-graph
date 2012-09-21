@@ -2,14 +2,14 @@ class WeiboStatistics
   def self.group_data(data)
     year_data = {}
 
-    first_data_year = data.first.weibo_created_at.year
-    last_data_year = data.last.weibo_created_at.year
+    first_data_year = data.first.data_created_at.year
+    last_data_year = data.last.data_created_at.year
 
     if first_data_year == last_data_year
       year_data[first_data_year] = data
     else
       data.each do |row|
-        year = row.weibo_created_at.year
+        year = row.data_created_at.year
         (year_data[year] ||= []) << row
       end
     end
@@ -27,7 +27,7 @@ class WeiboStatistics
     week_data = {}
 
     year_data.each do |row|
-      week_number = row.weibo_created_at.cweek
+      week_number = row.data_created_at.to_date.cweek
       (week_data[week_number] ||= []) << row
     end
     

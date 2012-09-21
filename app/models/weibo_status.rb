@@ -45,7 +45,7 @@ class WeiboStatus < ActiveRecord::Base
     retweeted_status_id = retweeted_status.blank? ? '' : retweeted_status['id']
 
     weibo_user_id = status['user'].blank? ? '' : status['user']['id']
-    weibo_created_at = Date.parse(status['created_at']) unless status['created_at'].blank?
+    data_created_at = Date.parse(status['created_at']) unless status['created_at'].blank?
 
     # 创建 WeiboStatus 记录
     WeiboStatus.create(
@@ -56,7 +56,7 @@ class WeiboStatus < ActiveRecord::Base
       :bmiddle_pic => status['bmiddle_pic'],
       :original_pic => status['original_pic'],
       :thumbnail_pic => status['thumbnail_pic'],
-      :weibo_created_at => weibo_created_at,
+      :data_created_at => data_created_at,
       :json => status.to_json
     )
 

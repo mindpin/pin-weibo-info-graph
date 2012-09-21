@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120906010627) do
+ActiveRecord::Schema.define(:version => 20120921033955) do
 
   create_table "bilateral_friendships", :force => true do |t|
     t.integer  "weibo_user_id",       :limit => 8
@@ -83,7 +83,7 @@ ActiveRecord::Schema.define(:version => 20120906010627) do
     t.integer  "weibo_status_id",  :limit => 8
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.date     "weibo_created_at"
+    t.datetime "data_created_at"
     t.text     "json"
     t.integer  "to_weibo_user_id", :limit => 8
   end
@@ -99,7 +99,7 @@ ActiveRecord::Schema.define(:version => 20120906010627) do
     t.text     "json"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.date     "weibo_created_at"
+    t.datetime "data_created_at"
   end
 
   add_index "weibo_statuses", ["weibo_status_id"], :name => "index_weibo_statuses_on_weibo_status_id"

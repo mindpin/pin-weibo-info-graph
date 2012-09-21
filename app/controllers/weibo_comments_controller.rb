@@ -21,11 +21,11 @@ class WeiboCommentsController < ApplicationController
   # 当前登录用户发出的评论列表
   def by_me
     # 把我所有发出的评论从数据表拿出来显示在view上
-    @my_comments = current_user.weibo_auth.my_comments
+    @sent_comments = current_user.weibo_user.sent_comments
   end
 
   def refresh_by_me
-    current_user.weibo_auth.refresh_my_comments
+    current_user.weibo_auth.refresh_sent_comments
     redirect_to "/weibo_comments/by_me"
   end
 

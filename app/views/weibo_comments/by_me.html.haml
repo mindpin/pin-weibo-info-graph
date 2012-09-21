@@ -14,9 +14,9 @@
   = link_to '刷新','/weibo_comments/refresh_by_me',:method => 'post'
 
   .page-weibo-comments
-    - if !@my_comments.blank?
+    - if !@sent_comments.blank?
       .comments
-        - @my_comments.each do |comment|
+        - @sent_comments.each do |comment|
           .comment
             .text= comment.text
     - else

@@ -15,16 +15,6 @@ class UserWeiboAuth < ActiveRecord::Base
     Weibo2::Client.from_hash(:access_token => self.token, :expires_in => self.expires_in)
   end
 
-  def refresh_my_comments
-    options = {}
-    comment = self.my_comments.first
-    if !comment.blank?
-      options[:since_id] = comment.weibo_comment_id
-    end
-    comments = get_my_comments_by_count(200,options)
-    comments.each{|comment|WeiboComment.create_by_api_hash(comment)}
-  end
-
   def refresh_received_comments
     options = {}
     comment = self.received_comments.first
@@ -33,16 +23,6 @@ class UserWeiboAuth < ActiveRecord::Base
     end
     comments = get_received_comments_by_count(200,options)
     comments.each{|comment|WeiboComment.create_by_api_hash(comment)}
-  end
-  
-  # 采集我发出的评论
-  def get_my_comments_by_count(count,options)
-    client = self.weibo_client
-
-    loop_to_request_weibo_api(count) do |current_page|
-      response = client.comments.by_me(options.merge(:page => current_page, :count => 20)).parsed
-      response['comments']
-    end
   end
 
   # 采集我收到的评论
@@ -113,5 +93,29 @@ class UserWeiboAuth < ActiveRecord::Base
     end
   end
   # end UserMethods
+
+  # 刷新该 user_weibo_auth 对象对应的微博授权用户的 发出的评论 数据
+  # 参考 http://open.weibo.com/wiki/2/comments/by_me
+  # 只能针对当前微博授权用户调用，不能针对任意用户调用
+  # 所以这个方法只能定义在这里
+  def refresh_sent_comments
+    options = {}
+    comment = self.weibo_user.sent_comments.first
+    if !comment.blank?
+      options[:since_id] = comment.weibo_comment_id
+    end
+    comments = get_sent_comments_by_count(200, options)
+    comments.each{|comment| WeiboComment.create_by_api_hash(comment)}
+  end
+
+  # 采集我发出的评论
+  def get_sent_comments_by_count(count, options)
+    client = self.weibo_client
+
+    loop_to_request_weibo_api(count) do |current_page|
+      response = client.comments.by_me(options.merge(:page => current_page, :count => 20)).parsed
+      response['comments']
+    end
+  end
 
 end
