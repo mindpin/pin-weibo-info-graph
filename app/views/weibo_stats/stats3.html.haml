@@ -7,26 +7,18 @@
 
 
 .page-weibo-interactive-users
-  :ruby
-    weibo_users = users_by_my_comments_and_retweeted(@group_comments, @group_retweeted)
-  
-  - if weibo_users.blank?
-    %li 数据库中没有已经缓存的评论或转发记录
-
+  - if @grouped_comments.blank?
+    数据库中没有该用户发出的评论
   - else
-    - weibo_users.each do |year, week_users|
-      %li
-        %label= year
-        = # debug users
-        = # debug users[year]
-
-        %ul
-        - week_users.each do |week_number, users|
-          %li= week_dates(year,  week_number)
-
-          %ul
-          - users.each do |user, count|
-            - screen_name = WeiboUser.find_by_weibo_user_id(user).screen_name
-            %li= "#{screen_name}, #{count}"
-
-
+    - @grouped_comments.each do |week_data|
+      .week-data{:style => 'background-color:rgba(0,0,0,0.3); padding:10px; margin-bottom: 10px;'}
+        .head
+          .year #{week_data.year} 年
+          .week 第 #{week_data.week} 周
+          .count 共发出 #{week_data.list.length} 条评论
+        .stat
+          .t 其中针对每个人的条目数：
+          - week_data.get_interactive_stat.each do |to_weibo_user, count|
+            .count
+              %span.to_weibo_user= to_weibo_user.screen_name
+              %span.count= count

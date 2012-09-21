@@ -274,12 +274,4 @@ class WeiboUser < ActiveRecord::Base
 
     follower_weibo_users
   end
-
-  # 评论
-  # --------------
-
-  def group_sent_comments
-    WeiboStatistics.group_data(self.sent_comments)
-  end
-
 end

@@ -13,13 +13,13 @@ class WeiboStatsController < ApplicationController
     weibo_user = current_user.weibo_user
 
     # 当前登录用户发出的评论按星期分组
-    @group_comments = weibo_user.group_sent_comments
+    @grouped_comments = WeiboStatistics.group_data_by_week(weibo_user.sent_comments)
 
-    # 当前登录用户转发的微博按星期分组
-    @group_retweeted = weibo_user.group_retweeted_statuses
+    # # 当前登录用户转发的微博按星期分组
+    # @group_retweeted = weibo_user.group_retweeted_statuses
 
-    # 当前登录用户转发的微博
-    @retweeted_statuses = weibo_user.retweeted_statuses
+    # # 当前登录用户转发的微博
+    # @retweeted_statuses = weibo_user.retweeted_statuses
   end
 
 

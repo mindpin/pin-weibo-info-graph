@@ -1,7 +1,13 @@
 class WeiboComment < ActiveRecord::Base
-  belongs_to :auth_user, 
-             :class_name => 'UserWeiboAuth', 
-             :foreign_key => :weibo_user_id, :primary_key => :weibo_user_id
+  belongs_to :weibo_user, 
+             :class_name => 'WeiboUser', 
+             :foreign_key => :weibo_user_id, 
+             :primary_key => :weibo_user_id
+
+  belongs_to :to_weibo_user,
+             :class_name => 'WeiboUser', 
+             :foreign_key => :to_weibo_user_id, 
+             :primary_key => :weibo_user_id
 
   belongs_to :weibo_status, 
              :class_name => 'WeiboStatus', 
@@ -24,16 +30,14 @@ class WeiboComment < ActiveRecord::Base
     return if comment.blank?
     return if !WeiboComment.find_by_weibo_comment_id(comment['idstr']).blank?
 
-    data_created_at = Date.parse(comment['created_at']) unless comment['created_at'].blank?
-
     WeiboComment.create(
-      :weibo_comment_id => comment['idstr'],
-      :text => comment['text'],
-      :weibo_user_id => comment['user']['idstr'],
-      :weibo_status_id => comment['status']['idstr'],
-      :data_created_at => data_created_at,
-      :json => comment.to_json,
-      :to_weibo_user_id => comment['status']['user']['id']
+      :weibo_comment_id => comment['idstr'],                  # 评论ID
+      :text             => comment['text'],                   # 评论正文
+      :weibo_user_id    => comment['user']['idstr'],          # 评论作者ID
+      :weibo_status_id  => comment['status']['idstr'],        # 评论所在的微博ID
+      :data_created_at  => Date.parse(comment['created_at']), # 评论的发布日期
+      :json             => comment.to_json,                   # 评论的原始json
+      :to_weibo_user_id => comment['status']['user']['id']    # 评论针对的用户ID
     )
 
     WeiboStatus.create_by_api_hash(comment['status'])
