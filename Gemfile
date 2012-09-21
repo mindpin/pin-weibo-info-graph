@@ -22,3 +22,15 @@ group :assets do
   gem 'coffee-rails', '~> 3.1.1'
   gem 'uglifier', '>= 1.0.3'
 end
+
+
+
+group :development, :test do
+  gem 'rspec-rails'
+  gem 'rcov'
+  gem 'spork', '~> 0.9.2'
+  gem 'timecop'
+  gem 'factory_girl', '~> 2.6'
+  gem 'factory_girl_rails'
+  gem 'database_cleaner'
+end

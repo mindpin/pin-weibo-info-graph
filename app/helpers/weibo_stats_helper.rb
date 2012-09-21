@@ -17,14 +17,14 @@ module WeiboStatsHelper
         week_data.each do |week|
           weibo_users = Hash.new(0)
 
-          week_index = Date.parse(week[0].weibo_created_at.to_s).cweek
+          # week_index = Date.parse(week[0].weibo_created_at.to_s).cweek
 
-          week.each do |row|
+          week[1].each do |row|
             next if row.weibo_user_id.nil?
             weibo_users[row.weibo_user_id] += 1
           end
 
-          weeks[week_index] = weibo_users
+          weeks[week[0]] = weibo_users
         end
 
         years[year] = weeks.to_hash

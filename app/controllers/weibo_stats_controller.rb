@@ -14,6 +14,9 @@ class WeiboStatsController < ApplicationController
       # 当前登录用户发出的评论按星期分组
       @group_comments = current_user.weibo_auth.group_my_comments
 
+      p @group_comments
+      p 666
+
       # 当前登录用户转发的微博按星期分组
       @group_retweeted = current_user.weibo_auth.weibo_user.group_retweeted_statuses
 
