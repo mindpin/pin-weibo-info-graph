@@ -1,12 +1,6 @@
 class UserWeiboAuth < ActiveRecord::Base
   belongs_to :user, :class_name => 'User', :foreign_key => 'user_id'
 
-  has_many :my_comments, 
-           :class_name => 'WeiboComment',
-           :conditions => lambda { "to_weibo_user_id != #{self.weibo_user_id}" },
-           :order => 'weibo_comment_id desc',
-           :foreign_key => :weibo_user_id, :primary_key => :weibo_user_id
-
   has_many :received_comments,
            :class_name => 'WeiboComment',
            :order => 'weibo_comment_id desc',
@@ -61,10 +55,6 @@ class UserWeiboAuth < ActiveRecord::Base
     end
   end
 
-  def group_my_comments
-    WeiboStatistics.group_data(self.my_comments)
-  end
-
   def group_received_comments
     WeiboStatistics.group_data(self.received_comments)
   end
@@ -80,6 +70,13 @@ class UserWeiboAuth < ActiveRecord::Base
     end
     
     module InstanceMethods
+
+      def weibo_user
+        self.weibo_auth.weibo_user
+      rescue
+        nil
+      end
+
       def has_weibo_auth?
         (!self.weibo_auth.blank?) && (
           client = self.get_weibo_client
@@ -90,7 +87,6 @@ class UserWeiboAuth < ActiveRecord::Base
         false
       end
 
-      # begin set_new_weibo_auth
       def set_new_weibo_auth(auth_code, client)
         # 如果过期重新设置的话，先删除，后面再创建新的
         self.weibo_auth.destroy if !self.weibo_auth.blank?
@@ -109,13 +105,10 @@ class UserWeiboAuth < ActiveRecord::Base
           :avatar => user.profile_image_url
         )
       end
-      # end set_new_weibo_auth
 
-      # begin get_weibo_client
       def get_weibo_client
         self.weibo_auth.weibo_client
       end
-      # end get_weibo_client
 
     end
   end

@@ -10,9 +10,8 @@
   :ruby
     weibo_users = users_by_my_comments_and_retweeted(@group_comments, @group_retweeted)
   
-  %ul
   - if weibo_users.blank?
-    %li= "数据库暂时还没有相关的评论记录，请先采集"
+    %li 数据库中没有已经缓存的评论或转发记录
 
   - else
     - weibo_users.each do |year, week_users|

@@ -13,6 +13,8 @@ class WeiboComment < ActiveRecord::Base
             :text, :weibo_user_id, 
             :weibo_status_id, :weibo_created_at, :json, :to_weibo_user_id,  :presence => true
 
+  default_scope order('weibo_comment_id DESC')
+
   def self.create_by_api_hash(comment)
     return if comment.blank?
     return if !WeiboComment.find_by_weibo_comment_id(comment['idstr']).blank?

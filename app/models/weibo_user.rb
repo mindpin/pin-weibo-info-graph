@@ -12,6 +12,11 @@ class WeiboUser < ActiveRecord::Base
            :class_name => 'BilateralFriendship',
            :foreign_key => :weibo_user_id
 
+  has_many :sent_comments, 
+           :class_name => 'WeiboComment',
+           :foreign_key => :weibo_user_id, 
+           :primary_key => :weibo_user_id
+
   validates :weibo_user_id, :uniqueness => true
 
 
@@ -34,7 +39,6 @@ class WeiboUser < ActiveRecord::Base
     end
     weibo_user
   end
-
 
 
   def self.search(client,query)
@@ -271,6 +275,8 @@ class WeiboUser < ActiveRecord::Base
     follower_weibo_users
   end
 
-
+  def group_my_comments
+    WeiboStatistics.group_data(self.sent_comments)
+  end
 
 end
