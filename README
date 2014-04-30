@@ -1,8 +1,0 @@
-Work flow
-
-ruby 1.8.7
-
-
-bundle install
-rake db:migrate
-
